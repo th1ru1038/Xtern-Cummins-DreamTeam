@@ -5,6 +5,7 @@ Easy-to-use functions for reading and writing to the database.
 
 import sqlite3
 import os
+import re
 import json
 from datetime import datetime
 
