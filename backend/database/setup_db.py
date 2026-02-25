@@ -21,13 +21,19 @@ def create_database():
     # ──────────────────────────────────────────────
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS fault_codes (
-            id              INTEGER PRIMARY KEY AUTOINCREMENT,
-            fault_code      VARCHAR(10) NOT NULL UNIQUE,
-            description     TEXT NOT NULL,
-            common_in_insite BOOLEAN DEFAULT 1,
-            qsol_available  BOOLEAN DEFAULT 1,
+            id               INTEGER PRIMARY KEY AUTOINCREMENT,
+            cummins_code     INTEGER,
+            spn              INTEGER,
+            fmi              INTEGER,
+            obd2_code        VARCHAR(10),
+            pid_sid          VARCHAR(20),
+            description      TEXT NOT NULL,
+            system_category  VARCHAR(50),
             complexity       VARCHAR(10) CHECK(complexity IN ('low', 'medium', 'high')),
             safety_critical  BOOLEAN DEFAULT 0,
+            causes_derate    BOOLEAN DEFAULT 0,
+            qsol_procedure   VARCHAR(50),
+            applies_to       VARCHAR(100) DEFAULT 'all',
             created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -70,6 +76,8 @@ def create_database():
             id              INTEGER PRIMARY KEY AUTOINCREMENT,
             engine_serial   VARCHAR(50) NOT NULL UNIQUE,
             engine_model    VARCHAR(50),
+            ecm_type        VARCHAR(20),
+            vehicle_type    VARCHAR(20) CHECK(vehicle_type IN ('heavy_duty', 'medium_duty', 'light_duty')),
             year            INTEGER,
             mileage         INTEGER,
             customer_name   VARCHAR(100),
@@ -103,7 +111,7 @@ def create_database():
             id              INTEGER PRIMARY KEY AUTOINCREMENT,
             engine_serial   VARCHAR(50) NOT NULL,
             service_date    DATE NOT NULL,
-            fault_code      VARCHAR(10),
+            fault_code_input VARCHAR(30),
             repair_type     TEXT NOT NULL,
             parts_replaced  TEXT,
             part_cost       REAL DEFAULT 0,
@@ -126,7 +134,8 @@ def create_database():
 
             -- Context
             engine_serial           VARCHAR(50) NOT NULL,
-            fault_code              VARCHAR(10) NOT NULL,
+            fault_code_input        VARCHAR(30) NOT NULL,
+            fault_code_id           INTEGER,
             tech_id                 VARCHAR(50) NOT NULL,
             tech_skill_level        VARCHAR(20),
 
@@ -165,15 +174,20 @@ def create_database():
 
             -- Audit
             created_at              DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at              DATETIME DEFAULT CURRENT_TIMESTAMP
+            updated_at              DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY (fault_code_id) REFERENCES fault_codes(id)
         )
     ''')
 
     # ──────────────────────────────────────────────
     # INDEXES — make searches faster
     # ──────────────────────────────────────────────
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_fault_spn_fmi ON fault_codes(spn, fmi)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_fault_obd2 ON fault_codes(obd2_code)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_fault_cummins ON fault_codes(cummins_code)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_fault_pid_sid ON fault_codes(pid_sid)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_decision_engine ON decision_logs(engine_serial)')
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_decision_fault ON decision_logs(fault_code)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_decision_tech ON decision_logs(tech_id)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_decision_time ON decision_logs(timestamp)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_service_engine ON service_history(engine_serial)')
@@ -182,8 +196,8 @@ def create_database():
     conn.commit()
     conn.close()
 
-    print(f"✅ Database created at: {os.path.abspath(DB_PATH)}")
-    print("✅ All 7 tables created successfully!")
+    print(f"Database created at: {os.path.abspath(DB_PATH)}")
+    print("All 7 tables created successfully!")
     print("")
     print("Tables:")
     print("  1. fault_codes        — Known Cummins fault codes")
