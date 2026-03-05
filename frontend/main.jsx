@@ -1,17 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
+import cumminsLogo from "./Cummins_logo.svg";
 
 const styles = `
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 
 :root {
-  --bg: #eef3f8;
+  --bg: #0b0b0d;
   --panel: #ffffff;
-  --ink: #1d2a38;
-  --muted: #647487;
-  --line: #d9e2ec;
-  --brand: #0f80e8;
-  --brand-soft: #d9edff;
+  --ink: #15181d;
+  --muted: #697887;
+  --line: #d8e0e8;
+  --brand: #da291c;
+  --brand-soft: #ffe7e5;
   --good: #16a34a;
   --warn: #d08700;
   --danger: #c0352b;
@@ -24,30 +25,184 @@ body {
   font-family: Manrope, sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(1300px 600px at -20% -20%, #d3e9ff 0%, rgba(211, 233, 255, 0) 60%),
-    radial-gradient(900px 500px at 120% 0%, #d9f7ed 0%, rgba(217, 247, 237, 0) 65%),
+    radial-gradient(1100px 500px at -8% 100%, rgba(218, 41, 28, 0.5) 0%, rgba(218, 41, 28, 0) 62%),
+    radial-gradient(980px 460px at 102% -10%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 58%),
+    radial-gradient(860px 360px at 102% 94%, rgba(218, 41, 28, 0.4) 0%, rgba(218, 41, 28, 0) 66%),
+    linear-gradient(165deg, #040404 0%, #0c0c0f 46%, #16161a 100%),
     var(--bg);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(620px 230px at 22% 22%, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0)),
+    radial-gradient(720px 260px at 72% 72%, rgba(218, 41, 28, 0.1), rgba(218, 41, 28, 0)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0) 4px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.62;
+  z-index: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  background:
+    radial-gradient(360px 130px at 20% 72%, rgba(218, 41, 28, 0.25), rgba(218, 41, 28, 0)),
+    radial-gradient(420px 170px at 78% 26%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+  filter: blur(18px);
+  animation: drift 16s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes drift {
+  0% { transform: translate3d(-2%, 0, 0); }
+  100% { transform: translate3d(2%, -1.5%, 0); }
 }
 h1, h2, h3, h4 { margin: 0; font-family: "Space Grotesk", sans-serif; }
 p { margin: 0; }
 
 .app-shell {
-  max-width: 1400px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 22px;
+  padding: 16px 22px 26px;
+  position: relative;
+  z-index: 1;
 }
 
-.top {
+.site-masthead {
+  position: relative;
+  z-index: 8;
+  background: linear-gradient(145deg, rgba(13, 13, 16, 0.94), rgba(9, 9, 10, 0.9));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  color: #eef3f7;
+}
+
+.utility-bar {
+  background: rgba(0, 0, 0, 0.42);
+  color: #fff;
+  font-size: 11px;
+}
+
+.utility-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 6px 22px;
   display: flex;
-  gap: 14px;
+  justify-content: flex-end;
+  gap: 18px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.primary-header {
+  background: transparent;
+}
+
+.header-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 8px 22px;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
+  gap: 16px;
 }
 
-.title { font-size: 24px; }
-.subtitle { color: var(--muted); font-size: 14px; }
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.primary-nav {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: #eef3f7;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.nav-link, .utility-link, .footer-link, .brand-link {
+  text-decoration: none;
+}
+
+.utility-link {
+  color: #fff;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-input {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  width: 220px;
+  background: rgba(255, 255, 255, 0.09);
+  color: #f1f5f8;
+}
+.search-input::placeholder {
+  color: #d4dde7;
+}
+
+.search-pill {
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+  color: #eef3f7;
+}
+
+.role-strip {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 8px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.title { font-size: 20px; }
+.subtitle { color: var(--muted); font-size: 12px; }
 
 .role-tabs {
   display: flex;
@@ -56,20 +211,24 @@ p { margin: 0; }
 }
 
 .role-tabs button {
-  border: 0;
-  background: #dbe7f3;
-  color: #2d4460;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: #edf3f8;
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 10px 16px;
   cursor: pointer;
   transition: 0.2s ease;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.3px;
 }
 
 .role-tabs button.active {
   background: var(--brand);
   color: #fff;
-  box-shadow: 0 8px 26px rgba(15, 128, 232, 0.36);
+  border-color: var(--brand);
+  box-shadow: none;
 }
 
 .panel {
@@ -227,10 +386,391 @@ p { margin: 0; }
 .tag.high { background: #ffe3e1; color: #9c1e17; }
 
 .recommend {
-  background: linear-gradient(180deg, #f9fbff 0%, #f2f8ff 100%);
-  border: 1px solid #dce8f5;
   border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #d7dde5;
+  background: #fcfcfc;
+}
+
+.model-workspace {
+  min-height: 392px;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+}
+
+.model-sidebar {
+  border-right: 1px solid #e0e6ee;
+  background: linear-gradient(180deg, #f6f7f9 0%, #f0f2f5 100%);
+  padding: 14px 12px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.model-item {
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 10px;
+  font-size: 13px;
+  color: #33475b;
+  font-weight: 700;
+}
+
+.model-item.active {
+  border-color: #d1dbe7;
+  background: #fff;
+  color: #121a22;
+}
+
+.model-main {
+  background:
+    radial-gradient(420px 150px at 80% 10%, rgba(218, 41, 28, 0.07), rgba(218, 41, 28, 0)),
+    radial-gradient(460px 180px at 40% 100%, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0)),
+    #f8f9fb;
   padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.model-pill {
+  margin: 0 auto;
+  border: 1px solid #d9e0e9;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: #ffffffc7;
+  font-size: 13px;
+  font-weight: 700;
+  color: #365068;
+}
+
+.model-summary {
+  width: min(680px, 100%);
+  margin: 0 auto;
+  border: 1px solid #d7dde5;
+  border-radius: 16px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(20, 35, 56, 0.08);
+}
+
+.model-title {
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.model-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.model-tag {
+  border-radius: 999px;
+  border: 1px solid #d8dfe8;
+  background: #f8fafc;
+  color: #42566b;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+
+.prompt-dock {
+  width: min(780px, 100%);
+  margin: 0 auto;
+  border: 1px solid #d2dae4;
+  border-radius: 18px;
+  background: #fff;
+  padding: 12px 12px 10px;
+  box-shadow: 0 8px 26px rgba(12, 24, 39, 0.08);
+}
+
+.prompt-input {
+  color: #9ba6b3;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.prompt-actions {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.model-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.model-chip {
+  border: 1px solid #d5dde8;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #455a70;
+  background: #fafcfe;
+}
+
+.send-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 0;
+  background: #101316;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.role-shell {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(145deg, rgba(13, 13, 16, 0.92), rgba(9, 9, 10, 0.86));
+  box-shadow: 0 26px 50px rgba(0, 0, 0, 0.35);
+  padding: 12px;
+}
+
+.role-shell .panel,
+.role-shell .stat,
+.role-shell .kpi,
+.role-shell .chart,
+.role-shell .metric,
+.role-shell .role-line {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #f1f5f8;
+  box-shadow: none;
+}
+
+.role-shell .label,
+.role-shell .subtitle,
+.role-shell .table th,
+.role-shell .table td,
+.role-shell .trend {
+  color: #d2dde8;
+}
+
+.role-shell .alert-item {
+  background: rgba(218, 41, 28, 0.2);
+  border-color: rgba(218, 41, 28, 0.45);
+  color: #ffe8e5;
+}
+
+.junior-page {
+  display: grid;
+  gap: 14px;
+}
+
+.agent-layout {
+  min-height: 620px;
+  display: grid;
+  grid-template-columns: 248px 1fr;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(145deg, rgba(13, 13, 16, 0.92), rgba(9, 9, 10, 0.86));
+  box-shadow: 0 26px 50px rgba(0, 0, 0, 0.35);
+}
+
+.agent-sidebar {
+  background: rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.11);
+  padding: 14px 10px;
+  color: #f1f5f8;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.agent-brand {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.agent-link {
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 13px;
+  color: #d4dde5;
+  border: 1px solid transparent;
+}
+
+.agent-link.active {
+  color: #fff;
+  border-color: rgba(218, 41, 28, 0.4);
+  background: rgba(218, 41, 28, 0.18);
+}
+
+.agent-main {
+  position: relative;
+  padding: 16px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+}
+
+.agent-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #e6edf3;
+  font-size: 13px;
+}
+
+.agent-badge {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f8;
+  font-weight: 700;
+}
+
+.agent-canvas {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(420px 180px at 80% 8%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+    radial-gradient(450px 220px at 8% 88%, rgba(218, 41, 28, 0.28), rgba(218, 41, 28, 0)),
+    linear-gradient(165deg, rgba(22, 22, 25, 0.92), rgba(10, 10, 12, 0.88));
+  padding: 24px;
+  color: #f5f7fa;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+
+.agent-canvas h2 {
+  max-width: 620px;
+  font-size: clamp(30px, 4.8vw, 52px);
+  line-height: 1.08;
+}
+
+.agent-canvas p {
+  max-width: 560px;
+  color: #d8e0e8;
+}
+
+.agent-prompt {
+  width: min(860px, 100%);
+  margin: 0 auto;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.94);
+  padding: 12px;
+}
+
+.agent-prompt-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.prompt-placeholder {
+  color: #8d98a6;
+  font-size: clamp(16px, 2.1vw, 32px);
+  line-height: 1.1;
+  flex: 1;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #d2d9e3;
+  background: #fff;
+  color: #19222b;
+  font-weight: 800;
+}
+
+.agent-controls {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip-dark {
+  border-radius: 999px;
+  border: 1px solid #d0d8e3;
+  background: #fff;
+  color: #334658;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.page-footer {
+  margin-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(8, 8, 10, 0.76);
+  color: #dce3ea;
+}
+
+.footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 22px 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.info-page {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(145deg, rgba(13, 13, 16, 0.92), rgba(9, 9, 10, 0.86));
+  box-shadow: 0 26px 50px rgba(0, 0, 0, 0.35);
+  color: #f0f4f8;
+  padding: 24px;
+  min-height: 420px;
+}
+
+.search-page {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(145deg, rgba(13, 13, 16, 0.92), rgba(9, 9, 10, 0.86));
+  box-shadow: 0 26px 50px rgba(0, 0, 0, 0.35);
+  color: #f0f4f8;
+  padding: 24px;
+  min-height: 420px;
+}
+
+.search-results {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.search-result {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 12px;
+  color: #f0f4f8;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .bar {
@@ -454,116 +994,159 @@ p { margin: 0; }
 @media (max-width: 1100px) {
   .diag-grid, .chart-grid, .admin-grid { grid-template-columns: 1fr; }
   .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .model-workspace { grid-template-columns: 1fr; }
+  .model-sidebar { grid-auto-flow: column; overflow-x: auto; border-right: 0; border-bottom: 1px solid #e0e6ee; }
+  .agent-layout { grid-template-columns: 1fr; min-height: 560px; }
+  .agent-sidebar { grid-auto-flow: column; overflow-x: auto; border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.11); }
+  .agent-main { min-height: 460px; }
 }
 
 @media (max-width: 760px) {
+  .header-inner { flex-wrap: wrap; }
+  .primary-nav { overflow-x: auto; flex-wrap: nowrap; max-width: 100%; }
+  .search-input { width: 160px; }
+  .role-strip { align-items: flex-start; }
+  .app-shell { padding: 12px 14px 20px; }
   .hero { grid-template-columns: 1fr; text-align: left; }
   .quick-cards { grid-template-columns: 1fr; }
   .kpi-grid { grid-template-columns: 1fr; }
+  .agent-canvas { padding: 16px; }
+  .agent-canvas h2 { font-size: clamp(22px, 9vw, 34px); }
+  .agent-prompt { padding: 10px; }
+  .agent-controls { gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .role-tabs { width: 100%; }
+  .role-tabs button { flex: 1; min-width: 0; padding: 9px 8px; }
+  .prompt-placeholder { font-size: 20px; }
+  .agent-top { flex-wrap: wrap; }
 }
 `;
 
-function ShellHeader({ role, setRole }) {
+function ShellHeader({ role, setRole, onSearch }) {
   const roles = ["Junior", "Senior", "Manager", "Admin"];
+  const [searchText, setSearchText] = useState("");
+  const handleRole = (nextRole) => {
+    setRole(nextRole);
+    window.location.hash = "#/home";
+  };
+  const submitSearch = (e) => {
+    e.preventDefault();
+    onSearch(searchText);
+  };
   return (
-    <div className="top">
-      <div>
-        <h1 className="title">ServiceSync AI UX Prototype</h1>
-        <p className="subtitle">Role-focused workflows with AI-guided diagnostics and governance</p>
+    <header className="site-masthead">
+      <div className="utility-bar">
+        <div className="utility-inner">
+          <a className="utility-link" href="#/about">About</a>
+          <a className="utility-link" href="#/support">Support</a>
+          <a className="utility-link" href="#/contact">Contact</a>
+        </div>
       </div>
-      <div className="role-tabs">
-        {roles.map((item) => (
-          <button key={item} className={role === item ? "active" : ""} onClick={() => setRole(item)}>
-            {item}
-          </button>
-        ))}
+      <div className="primary-header">
+        <div className="header-inner">
+          <a className="brand-link" href="#/home" aria-label="Cummins">
+            <img className="brand-logo" src={cumminsLogo} alt="Cummins logo" />
+          </a>
+          <nav className="primary-nav" aria-label="Primary">
+            <a className="nav-link" href="#/products">Products</a>
+            <a className="nav-link" href="#/parts-service">Parts & Service</a>
+            <a className="nav-link" href="#/technology">Technology</a>
+            <a className="nav-link" href="#/sustainability">Sustainability</a>
+          </nav>
+          <div className="header-actions">
+            <form className="search-form" onSubmit={submitSearch}>
+              <input
+                className="search-input"
+                placeholder="Search chats, pages, diagnostics..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+              <button className="search-pill" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
+      <div className="role-strip">
+        <div>
+          <h1 className="title">ServiceSync AI</h1>
+          <p className="subtitle">Role-focused workflows with AI-guided diagnostics and governance</p>
+        </div>
+        <div className="role-tabs">
+          {roles.map((item) => (
+            <button key={item} className={role === item ? "active" : ""} onClick={() => handleRole(item)}>
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+    </header>
   );
 }
 
 function JuniorView({ toast, setToast }) {
   const [offline, setOffline] = useState(false);
-  const [ripple, setRipple] = useState(false);
   const confidence = 82;
   const escalateUrgent = 35;
 
-  const startDiag = () => {
-    setRipple(true);
-    setTimeout(() => setRipple(false), 760);
-    setToast("Diagnostics started. Engine link request sent.");
-  };
-
   return (
-    <div className={offline ? "offline-tint" : ""}>
-      <div className="panel section" style={{ marginBottom: 12 }}>
-        <div className="row">
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <div className="avatar">JT</div>
-            <div className="status">
+    <div className={`junior-page ${offline ? "offline-tint" : ""}`}>
+      {offline && <div className="banner">Offline Mode - Using Cached AI Model | 2 Pending Sync</div>}
+
+      <section className="agent-layout">
+        <aside className="agent-sidebar">
+          <div className="agent-brand">ServiceSync Agent</div>
+          <div className="agent-link active">AI Mentor</div>
+          <div className="agent-link">Fault Code Retrieval</div>
+          <div className="agent-link">Service History</div>
+          <div className="agent-link">Escalation Queue</div>
+          <div className="agent-link">Offline Cache</div>
+        </aside>
+
+        <div className="agent-main">
+          <div className="agent-top">
+            <span>
+              Engine: QSK60 | Signal: ████░
+            </span>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <span className={`pulse ${offline ? "off" : "good"}`} />
               <span>{offline ? "Offline" : "Online"}</span>
-              {offline && <span className="tag med">Sync Pending</span>}
+              <button className="chip-dark" onClick={() => setOffline((v) => !v)}>
+                {offline ? "Go Online" : "Simulate Offline"}
+              </button>
             </div>
           </div>
-          <button className="btn blue" onClick={() => setOffline((v) => !v)}>
-            {offline ? "Go Online" : "Simulate Offline"}
-          </button>
+
+          <div className="agent-canvas">
+            <div className="agent-badge">{confidence}% confidence recommendation ready</div>
+            <h2>AI Mentor for Fast, Confident Cummins Diagnostics</h2>
+            <p>Diagnosis: Fuel Pressure Sensor Failure. Similar case cluster: 64%. Wear threshold reached.</p>
+          </div>
+
+          <div className="agent-prompt">
+            <div className="agent-prompt-row">
+              <button className="icon-btn">+</button>
+              <div className="prompt-placeholder">Ask AI for next diagnostic action...</div>
+              <button className="icon-btn">🎤</button>
+              <button className="send-btn" onClick={() => setToast("AI mentor prompt sent.")}>→</button>
+            </div>
+            <div className="agent-controls">
+              <span className="chip-dark">Model ▾</span>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button className="btn green" onClick={() => setToast("Proceed action accepted and logged.")}>Proceed</button>
+                <button className="btn yellow" onClick={() => setToast("Guided checklist launched.")}>Guidance</button>
+                <button className={`btn red ${escalateUrgent < 40 ? "shake" : ""}`} onClick={() => setToast("Escalation queued with full diagnostic context + optional voice note.")}>Escalate</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {offline && <div className="banner" style={{ marginBottom: 12 }}>Offline Mode - Using Cached AI Model | 2 Pending Sync</div>}
-
-      <div className="panel hero" style={{ marginBottom: 12 }}>
-        <div>
-          <h2>Start Diagnostics</h2>
-          <p className="subtitle" style={{ marginTop: 8 }}>Connect to engine to retrieve fault codes</p>
-        </div>
-        <button className={`ai-orb ${ripple ? "ripple" : ""}`} onClick={startDiag}>AI Connect</button>
-      </div>
-
-      <div className="quick-cards" style={{ marginBottom: 12 }}>
+      <div className="quick-cards">
         <div className="stat"><div className="label">Recent Diagnoses</div><div className="value">3</div></div>
         <div className="stat"><div className="label">Pending Escalations</div><div className="value">2</div></div>
         <div className="stat"><div className="label">Offline Cached Engines</div><div className="value">6</div></div>
-      </div>
-
-      <div className="diag-grid">
-        <div className="panel section grid">
-          <h3>Fault Code Retrieval</h3>
-          <div className="row"><span>Engine: QSK60</span><span>Connection: Stable</span><span>Signal: ████░</span></div>
-          {[{ c: "P1187", d: "Fuel Rail Pressure Drop", s: "high" }, { c: "P026C", d: "Injector Timing Drift", s: "med" }, { c: "P203F", d: "DEF Level Sensor Mismatch", s: "med" }].map((x) => (
-            <div className="fault-card" key={x.c}>
-              <div className="row">
-                <strong>{x.c}</strong>
-                <span className={`tag ${x.s}`}>{x.s === "high" ? "High Severity" : "Medium Severity"}</span>
-              </div>
-              <div>{x.d}</div>
-              <div className="subtitle">Expand for details ▾</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="panel section">
-          <h3 style={{ marginBottom: 10 }}>AI Recommendation</h3>
-          <div className="recommend">
-            <div className="label">Diagnosis</div>
-            <div style={{ fontWeight: 800, marginTop: 4 }}>Fuel Pressure Sensor Failure</div>
-            <div style={{ marginTop: 10 }}>
-              <div className="row"><span className="label">Confidence</span><strong>{confidence}% (High)</strong></div>
-              <div className="bar"><div className="fill" style={{ width: `${confidence}%` }} /></div>
-            </div>
-            <details style={{ marginTop: 10 }}>
-              <summary style={{ cursor: "pointer", fontWeight: 700 }}>AI Reasoning</summary>
-              <div className="subtitle" style={{ marginTop: 8 }}>Similar case cluster: 64% | Last replacement: None | Wear threshold reached</div>
-            </details>
-            <div className="actions">
-              <button className="btn green" onClick={() => setToast("Proceed action accepted and logged.")}>Proceed</button>
-              <button className="btn yellow" onClick={() => setToast("Guided checklist launched.")}>Proceed with Guidance</button>
-              <button className={`btn red ${escalateUrgent < 40 ? "shake" : ""}`} onClick={() => setToast("Escalation queued with full diagnostic context + optional voice note.")}>Escalate to Senior</button>
-            </div>
-          </div>
-        </div>
       </div>
 
       {toast && <div className="toast">{toast}</div>}
@@ -573,50 +1156,52 @@ function JuniorView({ toast, setToast }) {
 
 function SeniorView({ setToast, setShowOverride }) {
   return (
-    <div className="grid" style={{ gridTemplateColumns: "280px 1fr", alignItems: "start" }}>
-      <div className="panel section grid">
-        <h3>Senior Dashboard</h3>
-        <div className="stat"><div className="label">Pending Escalations</div><div className="value">14</div></div>
-        <div className="stat"><div className="label">High Risk Cases</div><div className="value">5</div></div>
-        <div className="stat"><div className="label">AI Overrides</div><div className="value">8</div></div>
-        <div className="stat"><div className="label">AI Performance</div><div className="value">89%</div></div>
-      </div>
-
-      <div className="grid">
-        <div className="panel section">
-          <h3 style={{ marginBottom: 10 }}>Escalation Queue</h3>
-          <table className="table">
-            <thead>
-              <tr><th>Priority</th><th>Engine</th><th>AI Confidence</th><th>Fault</th><th>Wait</th></tr>
-            </thead>
-            <tbody>
-              <tr className="risk low-conf"><td>High</td><td>QSK60</td><td>34%</td><td>Fuel Rail Pressure</td><td>17m</td></tr>
-              <tr className="risk safe-flag"><td>Critical</td><td>X15</td><td>61%</td><td>Coolant Temp Spike</td><td>39m</td></tr>
-              <tr className="risk aging"><td>Medium</td><td>B6.7</td><td>78%</td><td>NOx Sensor Drift</td><td>1h 24m</td></tr>
-            </tbody>
-          </table>
+    <div className="role-shell">
+      <div className="grid" style={{ gridTemplateColumns: "280px 1fr", alignItems: "start" }}>
+        <div className="panel section grid">
+          <h3>Senior Dashboard</h3>
+          <div className="stat"><div className="label">Pending Escalations</div><div className="value">14</div></div>
+          <div className="stat"><div className="label">High Risk Cases</div><div className="value">5</div></div>
+          <div className="stat"><div className="label">AI Overrides</div><div className="value">8</div></div>
+          <div className="stat"><div className="label">AI Performance</div><div className="value">89%</div></div>
         </div>
 
-        <div className="diag-grid">
-          <div className="panel section grid">
-            <h3>Escalation Detail</h3>
-            <div className="metric">Engine Data: QSK60 | 2,420 hrs | Unit #A49</div>
-            <div className="metric">Service History: Fuel filter replaced 3 months ago</div>
-            <div className="metric">Junior Notes: "Intermittent power drop under load."</div>
-            <div className="metric">Photos: 3 attachments present</div>
+        <div className="grid">
+          <div className="panel section">
+            <h3 style={{ marginBottom: 10 }}>Escalation Queue</h3>
+            <table className="table">
+              <thead>
+                <tr><th>Priority</th><th>Engine</th><th>AI Confidence</th><th>Fault</th><th>Wait</th></tr>
+              </thead>
+              <tbody>
+                <tr className="risk low-conf"><td>High</td><td>QSK60</td><td>34%</td><td>Fuel Rail Pressure</td><td>17m</td></tr>
+                <tr className="risk safe-flag"><td>Critical</td><td>X15</td><td>61%</td><td>Coolant Temp Spike</td><td>39m</td></tr>
+                <tr className="risk aging"><td>Medium</td><td>B6.7</td><td>78%</td><td>NOx Sensor Drift</td><td>1h 24m</td></tr>
+              </tbody>
+            </table>
           </div>
 
-          <div className="panel section grid">
-            <h3>AI Context</h3>
-            <div className="metric">Recommendation: Replace fuel pressure sensor + inspect harness</div>
-            <div className="metric">Confidence: 82%</div>
-            <div className="metric">Reasoning: Similar pattern in last 12 cases</div>
-            <div className="metric">Similar Cases: 8 resolved, 1 overridden</div>
-            <div className="actions">
-              <button className="btn green" onClick={() => setToast("Escalation approved. Response timestamped.")}>Approve</button>
-              <button className="btn red" onClick={() => setToast("Escalation rejected with notes.")}>Reject</button>
-              <button className="btn blue" onClick={() => setToast("Requested more information from junior technician.")}>Request More Info</button>
-              <button className="btn yellow" onClick={() => setShowOverride(true)}>Override AI</button>
+          <div className="diag-grid">
+            <div className="panel section grid">
+              <h3>Escalation Detail</h3>
+              <div className="metric">Engine Data: QSK60 | 2,420 hrs | Unit #A49</div>
+              <div className="metric">Service History: Fuel filter replaced 3 months ago</div>
+              <div className="metric">Junior Notes: "Intermittent power drop under load."</div>
+              <div className="metric">Photos: 3 attachments present</div>
+            </div>
+
+            <div className="panel section grid">
+              <h3>AI Context</h3>
+              <div className="metric">Recommendation: Replace fuel pressure sensor + inspect harness</div>
+              <div className="metric">Confidence: 82%</div>
+              <div className="metric">Reasoning: Similar pattern in last 12 cases</div>
+              <div className="metric">Similar Cases: 8 resolved, 1 overridden</div>
+              <div className="actions">
+                <button className="btn green" onClick={() => setToast("Escalation approved. Response timestamped.")}>Approve</button>
+                <button className="btn red" onClick={() => setToast("Escalation rejected with notes.")}>Reject</button>
+                <button className="btn blue" onClick={() => setToast("Requested more information from junior technician.")}>Request More Info</button>
+                <button className="btn yellow" onClick={() => setShowOverride(true)}>Override AI</button>
+              </div>
             </div>
           </div>
         </div>
@@ -628,26 +1213,28 @@ function SeniorView({ setToast, setShowOverride }) {
 function ManagerView() {
   const bars = useMemo(() => [22, 34, 28, 44, 51, 58, 62], []);
   return (
-    <div className="grid">
-      <div className="kpi-grid">
-        {[{ k: "MTTR", v: "↓ 18%" }, { k: "FTFR", v: "↑ 12%" }, { k: "Escalation Rate", v: "↓ 22%" }, { k: "AI Accuracy", v: "89%" }].map((x) => (
-          <div className="kpi" key={x.k}><div className="label">{x.k}</div><div className="value">{x.v}</div><div className="trend">Improving trend</div></div>
-        ))}
-      </div>
+    <div className="role-shell">
+      <div className="grid">
+        <div className="kpi-grid">
+          {[{ k: "MTTR", v: "↓ 18%" }, { k: "FTFR", v: "↑ 12%" }, { k: "Escalation Rate", v: "↓ 22%" }, { k: "AI Accuracy", v: "89%" }].map((x) => (
+            <div className="kpi" key={x.k}><div className="label">{x.k}</div><div className="value">{x.v}</div><div className="trend">Improving trend</div></div>
+          ))}
+        </div>
 
-      <div className="chart-grid">
-        <div className="chart"><h4>AI Accuracy Trend (30/60/90)</h4><div className="spark">{bars.map((v, i) => <span key={i} style={{ height: `${v + 10}px` }} />)}</div></div>
-        <div className="chart"><h4>Escalation by Technician</h4><div className="spark">{[30, 52, 20, 66, 41, 57, 25].map((v, i) => <span key={i} style={{ height: `${v}px` }} />)}</div></div>
-        <div className="chart"><h4>Repeat Fault Heatmap</h4><p className="subtitle" style={{ marginTop: 8 }}>Cluster concentration highest on fuel and sensor-related fault families.</p></div>
-        <div className="chart"><h4>Warranty Cost Reduction</h4><p className="subtitle" style={{ marginTop: 8 }}>Projected quarterly savings trend remains above target by 9%.</p></div>
-      </div>
+        <div className="chart-grid">
+          <div className="chart"><h4>AI Accuracy Trend (30/60/90)</h4><div className="spark">{bars.map((v, i) => <span key={i} style={{ height: `${v + 10}px` }} />)}</div></div>
+          <div className="chart"><h4>Escalation by Technician</h4><div className="spark">{[30, 52, 20, 66, 41, 57, 25].map((v, i) => <span key={i} style={{ height: `${v}px` }} />)}</div></div>
+          <div className="chart"><h4>Repeat Fault Heatmap</h4><p className="subtitle" style={{ marginTop: 8 }}>Cluster concentration highest on fuel and sensor-related fault families.</p></div>
+          <div className="chart"><h4>Warranty Cost Reduction</h4><p className="subtitle" style={{ marginTop: 8 }}>Projected quarterly savings trend remains above target by 9%.</p></div>
+        </div>
 
-      <div className="panel section">
-        <h3 style={{ marginBottom: 10 }}>Risk Alerts</h3>
-        <div className="alerts">
-          <div className="alert-item">Technicians with high override rate detected in East region (3 users)</div>
-          <div className="alert-item">AI confidence drift detected in DEF subsystem diagnostics</div>
-          <div className="alert-item">Repeat part replacement cluster detected: Fuel pressure sensors</div>
+        <div className="panel section">
+          <h3 style={{ marginBottom: 10 }}>Risk Alerts</h3>
+          <div className="alerts">
+            <div className="alert-item">Technicians with high override rate detected in East region (3 users)</div>
+            <div className="alert-item">AI confidence drift detected in DEF subsystem diagnostics</div>
+            <div className="alert-item">Repeat part replacement cluster detected: Fuel pressure sensors</div>
+          </div>
         </div>
       </div>
     </div>
@@ -656,41 +1243,95 @@ function ManagerView() {
 
 function AdminView({ setToast }) {
   return (
-    <div className="admin-grid">
-      <div className="panel section grid">
-        <h3>System Health</h3>
-        <div className="metric"><strong>API Uptime:</strong> 99.97%</div>
-        <div className="metric"><strong>Offline Device Count:</strong> 23</div>
-        <div className="metric"><strong>Sync Latency:</strong> 1.8s avg</div>
-      </div>
-
-      <div className="panel section grid">
-        <h3>AI Management</h3>
-        <div className="metric"><strong>Model Version:</strong> v3.8.2</div>
-        <div className="actions">
-          <button className="btn blue" onClick={() => setToast("New model deployment started.")}>Deploy New Model</button>
-          <button className="btn yellow" onClick={() => setToast("Rollback initiated to previous stable model.")}>Rollback</button>
+    <div className="role-shell">
+      <div className="admin-grid">
+        <div className="panel section grid">
+          <h3>System Health</h3>
+          <div className="metric"><strong>API Uptime:</strong> 99.97%</div>
+          <div className="metric"><strong>Offline Device Count:</strong> 23</div>
+          <div className="metric"><strong>Sync Latency:</strong> 1.8s avg</div>
         </div>
-        <div className="metric"><strong>Audit Logs:</strong> Performance and override records available</div>
-      </div>
 
-      <div className="panel section" style={{ gridColumn: "1 / -1" }}>
-        <h3 style={{ marginBottom: 10 }}>Role-Based Access Control</h3>
-        <div className="role-list">
-          {[
-            ["Junior", true],
-            ["Senior", true],
-            ["Manager", true],
-            ["Admin", true],
-          ].map(([role, on]) => (
-            <div className="role-line" key={role}>
-              <span>{role}</span>
-              <span className={`toggle ${on ? "on" : ""}`} />
-            </div>
-          ))}
+        <div className="panel section grid">
+          <h3>AI Management</h3>
+          <div className="metric"><strong>Model Version:</strong> v3.8.2</div>
+          <div className="actions">
+            <button className="btn blue" onClick={() => setToast("New model deployment started.")}>Deploy New Model</button>
+            <button className="btn yellow" onClick={() => setToast("Rollback initiated to previous stable model.")}>Rollback</button>
+          </div>
+          <div className="metric"><strong>Audit Logs:</strong> Performance and override records available</div>
+        </div>
+
+        <div className="panel section" style={{ gridColumn: "1 / -1" }}>
+          <h3 style={{ marginBottom: 10 }}>Role-Based Access Control</h3>
+          <div className="role-list">
+            {[
+              ["Junior", true],
+              ["Senior", true],
+              ["Manager", true],
+              ["Admin", true],
+            ].map(([role, on]) => (
+              <div className="role-line" key={role}>
+                <span>{role}</span>
+                <span className={`toggle ${on ? "on" : ""}`} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="page-footer">
+      <div className="footer-inner">
+        <span>© {new Date().getFullYear()} Cummins ServiceSync AI</span>
+        <div className="footer-links">
+          <a className="footer-link" href="#/privacy">Privacy</a>
+          <a className="footer-link" href="#/terms">Terms</a>
+          <a className="footer-link" href="#/contact">Contact</a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function InfoPage({ title, description }) {
+  return (
+    <section className="info-page">
+      <h2 style={{ color: "#fff", marginBottom: 8 }}>{title}</h2>
+      <p style={{ color: "#d3dce6", maxWidth: 760 }}>{description}</p>
+      <div style={{ marginTop: 16 }}>
+        <a className="chip-dark" href="#/home">Return to ServiceSync Dashboard</a>
+      </div>
+    </section>
+  );
+}
+
+function SearchPage({ query, results, onPickRole }) {
+  return (
+    <section className="search-page">
+      <h2 style={{ color: "#fff", marginBottom: 8 }}>Search</h2>
+      <p style={{ color: "#d3dce6", maxWidth: 760 }}>
+        {query ? `Results for "${query}"` : "Search chats, dashboards, diagnostics, and support pages."}
+      </p>
+      <div className="search-results">
+        {results.length === 0 && <div className="model-tag">No results found. Try another keyword.</div>}
+        {results.map((item) => (
+          <a
+            key={item.title}
+            className="search-result"
+            href={item.href}
+            onClick={() => item.role && onPickRole(item.role)}
+          >
+            <strong>{item.title}</strong>
+            <div className="subtitle" style={{ color: "#d3dce6", marginTop: 4 }}>{item.type}</div>
+          </a>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -700,17 +1341,75 @@ function App() {
   const [showOverride, setShowOverride] = useState(false);
   const [overrideReason, setOverrideReason] = useState("");
   const [overrideType, setOverrideType] = useState("");
+  const [route, setRoute] = useState(() => window.location.hash || "#/home");
+
+  useEffect(() => {
+    const onHashChange = () => setRoute(window.location.hash || "#/home");
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
   const dismissToastSoon = (message) => {
     setToast(message);
     setTimeout(() => setToast(""), 2400);
   };
+  const handleSearch = (queryText) => {
+    const cleaned = queryText.trim();
+    const suffix = cleaned ? `?query=${encodeURIComponent(cleaned)}` : "";
+    window.location.hash = `#/search${suffix}`;
+  };
+
+  const pages = {
+    about: { title: "About", description: "ServiceSync AI delivers guided diagnostics, escalation intelligence, and role-based reliability tooling for field operations." },
+    support: { title: "Support", description: "Support resources include troubleshooting guides, model diagnostics, and escalation response workflows." },
+    contact: { title: "Contact", description: "Contact the ServiceSync operations team for platform access, issue response, and enterprise onboarding." },
+    products: { title: "Products", description: "Explore Cummins power solutions integrated with ServiceSync diagnostics and predictive maintenance tooling." },
+    "parts-service": { title: "Parts & Service", description: "Find service workflows, replacement planning, and maintenance guidance linked to field diagnostics." },
+    technology: { title: "Technology", description: "View AI model capabilities, confidence monitoring, and production support architecture for technicians." },
+    sustainability: { title: "Sustainability", description: "Track operational efficiency and sustainability outcomes through reliable diagnostics and reduced repeat repairs." },
+    search: { title: "Search", description: "Use global search to locate cases, engines, fault clusters, and support resources across ServiceSync AI." },
+    privacy: { title: "Privacy", description: "Privacy controls include audit-safe data handling, role-based access, and secure escalation context management." },
+    terms: { title: "Terms", description: "Review operational terms for platform usage, escalation governance, and model override accountability." },
+  };
+
+  const routeValue = route.startsWith("#/") ? route.slice(2) : "home";
+  const [routeKey, routeQuery = ""] = routeValue.split("?");
+  const searchParams = new URLSearchParams(routeQuery);
+  const searchQuery = searchParams.get("query") || "";
+  const staticPage = pages[routeKey];
+  const searchItems = [
+    { title: "Junior Technician Dashboard", type: "Dashboard", href: "#/home", role: "Junior" },
+    { title: "Senior Escalation Queue", type: "Dashboard", href: "#/home", role: "Senior" },
+    { title: "Manager Analytics Overview", type: "Dashboard", href: "#/home", role: "Manager" },
+    { title: "Admin System Health", type: "Dashboard", href: "#/home", role: "Admin" },
+    { title: "Chat: QSK60 Fuel Pressure Case", type: "Chat", href: "#/home", role: "Junior" },
+    { title: "Chat: DEF Sensor Escalation", type: "Chat", href: "#/home", role: "Senior" },
+    { title: "About", type: "Page", href: "#/about" },
+    { title: "Support", type: "Page", href: "#/support" },
+    { title: "Contact", type: "Page", href: "#/contact" },
+    { title: "Products", type: "Page", href: "#/products" },
+    { title: "Parts & Service", type: "Page", href: "#/parts-service" },
+    { title: "Technology", type: "Page", href: "#/technology" },
+    { title: "Sustainability", type: "Page", href: "#/sustainability" },
+    { title: "Privacy", type: "Page", href: "#/privacy" },
+    { title: "Terms", type: "Page", href: "#/terms" },
+  ];
+  const results = searchItems.filter((item) => {
+    if (!searchQuery) return true;
+    return `${item.title} ${item.type}`.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   let view = null;
-  if (role === "Junior") view = <JuniorView toast={toast} setToast={dismissToastSoon} />;
-  if (role === "Senior") view = <SeniorView setToast={dismissToastSoon} setShowOverride={setShowOverride} />;
-  if (role === "Manager") view = <ManagerView />;
-  if (role === "Admin") view = <AdminView setToast={dismissToastSoon} />;
+  if (routeKey === "search") {
+    view = <SearchPage query={searchQuery} results={results} onPickRole={setRole} />;
+  } else if (staticPage) {
+    view = <InfoPage title={staticPage.title} description={staticPage.description} />;
+  } else {
+    if (role === "Junior") view = <JuniorView toast={toast} setToast={dismissToastSoon} />;
+    if (role === "Senior") view = <SeniorView setToast={dismissToastSoon} setShowOverride={setShowOverride} />;
+    if (role === "Manager") view = <ManagerView />;
+    if (role === "Admin") view = <AdminView setToast={dismissToastSoon} />;
+  }
 
   const confirmOverride = () => {
     dismissToastSoon("Override confirmed, audit trail logged with timestamp.");
@@ -722,10 +1421,11 @@ function App() {
   return (
     <>
       <style>{styles}</style>
+      <ShellHeader role={role} setRole={setRole} onSearch={handleSearch} />
       <div className="app-shell">
-        <ShellHeader role={role} setRole={setRole} />
         {view}
       </div>
+      <Footer />
 
       {showOverride && (
         <div className="overlay">
