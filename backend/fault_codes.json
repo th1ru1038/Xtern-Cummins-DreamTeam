@@ -1,0 +1,1443 @@
+[
+  {
+    "id": 7,
+    "cummins_code": 84,
+    "spn": 84,
+    "fmi": 2,
+    "obd2_code": "P0500",
+    "pid_sid": "PID 84",
+    "description": "Vehicle Speed Sensor \u2014 Data Erratic or Intermittent",
+    "system_category": "drivetrain",
+    "complexity": "medium",
+    "safety_critical": 1,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-VSS-001",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Speed sensor air gap too large",
+        "probability": 0.3
+      },
+      {
+        "cause": "Sensor wiring damage or chafing",
+        "probability": 0.25
+      },
+      {
+        "cause": "Tone ring cracked or damaged",
+        "probability": 0.25
+      },
+      {
+        "cause": "ABS module communication issue",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code only occurs above 60 mph",
+        "likely_cause": "Tone ring cracked at one spot, only detectable at high rotational speed",
+        "ai_value_add": "AI correlates speed data with code occurrence timing in INSITE"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "cummins_code": 91,
+    "spn": 91,
+    "fmi": 3,
+    "obd2_code": "P0122",
+    "pid_sid": "PID 91",
+    "description": "Accelerator Pedal Position Sensor \u2014 Voltage Above Normal",
+    "system_category": "engine_control",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-PEDAL-001",
+    "applies_to": "X15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Accelerator pedal sensor failure",
+        "probability": 0.35
+      },
+      {
+        "cause": "Wiring short to voltage source",
+        "probability": 0.3
+      },
+      {
+        "cause": "Connector damage from cab moisture",
+        "probability": 0.35
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Pedal assembly recently replaced",
+        "likely_cause": "Wrong pedal part number or wiring misrouted during install",
+        "ai_value_add": "AI checks recent pedal replacement before wiring diagnosis"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "cummins_code": 94,
+    "spn": 94,
+    "fmi": 1,
+    "obd2_code": "P0087",
+    "pid_sid": "PID 94",
+    "description": "Fuel Delivery Pressure Low \u2014 Fuel Rail Pressure Below Normal",
+    "system_category": "fuel",
+    "complexity": "high",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-FUEL-001",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Fuel filter restriction",
+        "probability": 0.25
+      },
+      {
+        "cause": "Fuel supply pump failure",
+        "probability": 0.2
+      },
+      {
+        "cause": "Fuel pressure regulator issue",
+        "probability": 0.2
+      },
+      {
+        "cause": "Air in fuel system",
+        "probability": 0.2
+      },
+      {
+        "cause": "Fuel leak in supply line",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Fuel filter just replaced",
+        "likely_cause": "Air in fuel system from filter change or wrong filter part number used",
+        "ai_value_add": "AI suggests bleeding fuel system first instead of replacing pump"
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "cummins_code": 111,
+    "spn": 100,
+    "fmi": 1,
+    "obd2_code": "P0192",
+    "pid_sid": "PID 100",
+    "description": "Engine Oil Pressure Low \u2014 Data Valid But Below Normal Range",
+    "system_category": "lubrication",
+    "complexity": "high",
+    "safety_critical": 1,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-OIL-001",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Low oil level",
+        "probability": 0.3
+      },
+      {
+        "cause": "Oil pump failure",
+        "probability": 0.2
+      },
+      {
+        "cause": "Oil pressure sensor malfunction",
+        "probability": 0.2
+      },
+      {
+        "cause": "Worn main/rod bearings",
+        "probability": 0.15
+      },
+      {
+        "cause": "Oil filter blockage",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Oil just changed within last 500 miles",
+        "likely_cause": "Wrong oil viscosity or oil filter not seated properly",
+        "ai_value_add": "QSOL checks pump first; AI flags recent oil change as likely root cause"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "cummins_code": 102,
+    "spn": 102,
+    "fmi": 0,
+    "obd2_code": "P0234",
+    "pid_sid": null,
+    "description": "Turbocharger Boost Pressure \u2014 Data Above Normal Range (Overboost)",
+    "system_category": "air_intake",
+    "complexity": "high",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-TURBO-001",
+    "applies_to": "X15,ISX15,QSX15",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Turbo actuator stuck closed",
+        "probability": 0.3
+      },
+      {
+        "cause": "Wastegate malfunction",
+        "probability": 0.25
+      },
+      {
+        "cause": "Boost pressure sensor error",
+        "probability": 0.25
+      },
+      {
+        "cause": "Charge air cooler restriction",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "High altitude operation above 8000 ft",
+        "likely_cause": "Altitude compensation not calibrated; sensor reading may be accurate for altitude",
+        "ai_value_add": "QSOL doesn't factor altitude; AI checks GPS/location context"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "cummins_code": 103,
+    "spn": 102,
+    "fmi": 1,
+    "obd2_code": "P0299",
+    "pid_sid": null,
+    "description": "Turbocharger Boost Pressure Low \u2014 Underboost Condition",
+    "system_category": "air_intake",
+    "complexity": "high",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-TURBO-002",
+    "applies_to": "X15,ISX15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Turbocharger actuator failure",
+        "probability": 0.25
+      },
+      {
+        "cause": "Exhaust leak before turbo",
+        "probability": 0.2
+      },
+      {
+        "cause": "Intake air leak after compressor",
+        "probability": 0.2
+      },
+      {
+        "cause": "Clogged air filter",
+        "probability": 0.2
+      },
+      {
+        "cause": "VGT vanes sticking with carbon",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Air filter replaced within last week",
+        "likely_cause": "Wrong filter size or not fully seated causing unfiltered air bypass",
+        "ai_value_add": "AI checks service history for recent filter work before expensive turbo diagnosis"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "cummins_code": 105,
+    "spn": 105,
+    "fmi": 3,
+    "obd2_code": "P0108",
+    "pid_sid": "PID 105",
+    "description": "Intake Manifold Pressure (MAP) Sensor \u2014 Voltage Above Normal",
+    "system_category": "air_intake",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-MAP-001",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Intake pressure sensor failure",
+        "probability": 0.3
+      },
+      {
+        "cause": "Wiring short to voltage",
+        "probability": 0.25
+      },
+      {
+        "cause": "Connector corrosion",
+        "probability": 0.25
+      },
+      {
+        "cause": "ECM 5V reference voltage issue",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Multiple 5V sensor codes appear at the same time",
+        "likely_cause": "ECM 5V reference supply shorted; all sensors on that circuit affected",
+        "ai_value_add": "AI detects multi-sensor pattern pointing to shared 5V reference voltage failure"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "cummins_code": 108,
+    "spn": 108,
+    "fmi": 3,
+    "obd2_code": "P0073",
+    "pid_sid": "PID 108",
+    "description": "Ambient Air Temperature Sensor \u2014 Voltage Above Normal",
+    "system_category": "air_intake",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-AMB-001",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Ambient temp sensor failure",
+        "probability": 0.35
+      },
+      {
+        "cause": "Open circuit in sensor wiring",
+        "probability": 0.3
+      },
+      {
+        "cause": "Sensor physically damaged",
+        "probability": 0.2
+      },
+      {
+        "cause": "Connector corrosion",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": []
+  },
+  {
+    "id": 2,
+    "cummins_code": 151,
+    "spn": 110,
+    "fmi": 0,
+    "obd2_code": "P0217",
+    "pid_sid": "PID 110",
+    "description": "Engine Coolant Temperature High \u2014 Data Above Normal Range",
+    "system_category": "cooling",
+    "complexity": "medium",
+    "safety_critical": 1,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-COOL-001",
+    "applies_to": "X15,ISX15,B6.7,L9,QSB6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Thermostat stuck closed",
+        "probability": 0.25
+      },
+      {
+        "cause": "Water pump failure",
+        "probability": 0.2
+      },
+      {
+        "cause": "Radiator blockage or damage",
+        "probability": 0.2
+      },
+      {
+        "cause": "Coolant leak",
+        "probability": 0.15
+      },
+      {
+        "cause": "Fan clutch failure",
+        "probability": 0.1
+      },
+      {
+        "cause": "Low coolant level",
+        "probability": 0.1
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Thermostat replaced within last month",
+        "likely_cause": "Wrong thermostat rating installed or air pocket trapped after service",
+        "ai_value_add": "QSOL starts with radiator inspection; AI checks recent thermostat work first"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "cummins_code": 153,
+    "spn": 110,
+    "fmi": 3,
+    "obd2_code": "P0118",
+    "pid_sid": "PID 110",
+    "description": "Engine Coolant Temperature Sensor \u2014 Voltage Above Normal (Open Circuit)",
+    "system_category": "cooling",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-COOL-003",
+    "applies_to": "X15,B6.7,L9,QSB6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Open circuit in sensor wiring",
+        "probability": 0.3
+      },
+      {
+        "cause": "Coolant temperature sensor failure",
+        "probability": 0.3
+      },
+      {
+        "cause": "Corroded connector",
+        "probability": 0.2
+      },
+      {
+        "cause": "ECM pin damage",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Multiple sensor codes appearing at the same time",
+        "likely_cause": "Common ground wire issue or ECM connector problem, not individual sensors",
+        "ai_value_add": "QSOL treats each code separately; AI detects shared-ground pattern"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "cummins_code": 154,
+    "spn": 110,
+    "fmi": 4,
+    "obd2_code": "P0117",
+    "pid_sid": null,
+    "description": "Engine Coolant Temperature Sensor \u2014 Voltage Below Normal (Short Circuit)",
+    "system_category": "cooling",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-COOL-004",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Short to ground in sensor wiring",
+        "probability": 0.3
+      },
+      {
+        "cause": "Sensor internal failure",
+        "probability": 0.25
+      },
+      {
+        "cause": "Damaged wiring harness near exhaust",
+        "probability": 0.25
+      },
+      {
+        "cause": "Water intrusion in connector",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code appears only in cold weather below 0\u00b0F",
+        "likely_cause": "Moisture in connector freezing and causing intermittent short",
+        "ai_value_add": "AI factors weather/ambient temperature context into diagnosis"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "cummins_code": 112,
+    "spn": 111,
+    "fmi": 3,
+    "obd2_code": "P0237",
+    "pid_sid": "PID 111",
+    "description": "Engine Coolant Level Sensor \u2014 Voltage Above Normal",
+    "system_category": "cooling",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-COOL-002",
+    "applies_to": "X15,ISX15,QSX15",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Coolant level sensor failure",
+        "probability": 0.3
+      },
+      {
+        "cause": "Wiring harness damage near sensor",
+        "probability": 0.25
+      },
+      {
+        "cause": "Actual low coolant level",
+        "probability": 0.25
+      },
+      {
+        "cause": "Corroded connector pins",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Coolant system recently serviced or flushed",
+        "likely_cause": "Air pocket in cooling system or sensor connector not reconnected",
+        "ai_value_add": "QSOL assumes sensor failure; AI checks recent cooling system service first"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "cummins_code": 157,
+    "spn": 157,
+    "fmi": 0,
+    "obd2_code": "P0093",
+    "pid_sid": null,
+    "description": "Fuel Rail Pressure High \u2014 Data Above Normal Range",
+    "system_category": "fuel",
+    "complexity": "high",
+    "safety_critical": 1,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-FUEL-003",
+    "applies_to": "X15,ISX15",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Fuel pressure relief valve stuck closed",
+        "probability": 0.3
+      },
+      {
+        "cause": "Fuel pressure sensor malfunction",
+        "probability": 0.25
+      },
+      {
+        "cause": "High pressure pump internal failure",
+        "probability": 0.25
+      },
+      {
+        "cause": "Injector return line blockage",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Injectors recently replaced",
+        "likely_cause": "Wrong injector trim codes entered in ECM or return line not connected properly",
+        "ai_value_add": "AI checks for recent injector work before starting pump diagnostics"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "cummins_code": 168,
+    "spn": 168,
+    "fmi": 1,
+    "obd2_code": null,
+    "pid_sid": "PID 168",
+    "description": "Battery/System Voltage Low \u2014 Data Below Normal Range",
+    "system_category": "electrical",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-ELEC-001",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Weak or failing batteries",
+        "probability": 0.3
+      },
+      {
+        "cause": "Alternator undercharging",
+        "probability": 0.25
+      },
+      {
+        "cause": "Loose or corroded battery connections",
+        "probability": 0.25
+      },
+      {
+        "cause": "Parasitic electrical draw",
+        "probability": 0.1
+      },
+      {
+        "cause": "Corroded battery cables",
+        "probability": 0.1
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code only appears on cold morning starts",
+        "likely_cause": "Battery CCA capacity marginal, shows up only in cold; load test will confirm",
+        "ai_value_add": "AI factors ambient temperature into battery diagnosis priority"
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "cummins_code": 174,
+    "spn": 174,
+    "fmi": 0,
+    "obd2_code": null,
+    "pid_sid": "PID 174",
+    "description": "Fuel Temperature Too High \u2014 Data Above Normal Range",
+    "system_category": "fuel",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-FUEL-004",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Restricted fuel return line",
+        "probability": 0.3
+      },
+      {
+        "cause": "Fuel cooler blocked or damaged",
+        "probability": 0.3
+      },
+      {
+        "cause": "High ambient temperature operation",
+        "probability": 0.2
+      },
+      {
+        "cause": "Fuel heater stuck on",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": []
+  },
+  {
+    "id": 4,
+    "cummins_code": 143,
+    "spn": 190,
+    "fmi": 0,
+    "obd2_code": "P0219",
+    "pid_sid": "PID 190",
+    "description": "Engine Overspeed \u2014 Data Above Normal Range",
+    "system_category": "engine_control",
+    "complexity": "medium",
+    "safety_critical": 1,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-SPD-001",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Vehicle driven downhill in too low a gear",
+        "probability": 0.35
+      },
+      {
+        "cause": "Engine speed sensor intermittent signal",
+        "probability": 0.25
+      },
+      {
+        "cause": "ECM calibration issue",
+        "probability": 0.2
+      },
+      {
+        "cause": "Turbo overspin causing runaway condition",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code logged during PTO operation",
+        "likely_cause": "PTO speed setting misconfigured, not actual overspeed event",
+        "ai_value_add": "AI checks if PTO was active when code set; QSOL doesn't check PTO context"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "cummins_code": 411,
+    "spn": 411,
+    "fmi": 2,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "EGR Differential Pressure Sensor \u2014 Data Erratic",
+    "system_category": "egr",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-EGR-002",
+    "applies_to": "X15,ISX15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Sensor tubing clogged with soot",
+        "probability": 0.35
+      },
+      {
+        "cause": "Sensor internal failure",
+        "probability": 0.25
+      },
+      {
+        "cause": "Water accumulated in tubing",
+        "probability": 0.2
+      },
+      {
+        "cause": "EGR cooler leak contaminating sensor",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code clears after reset but returns every few hundred miles",
+        "likely_cause": "Sensor tubes slowly clogging with soot; clean tubes, don't just replace sensor",
+        "ai_value_add": "AI tracks code recurrence pattern and recommends tube maintenance with sensor"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "cummins_code": 639,
+    "spn": 639,
+    "fmi": 9,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "J1939 CAN Bus Communication Error \u2014 Abnormal Update Rate",
+    "system_category": "electrical",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-CAN-001",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "CAN bus wiring damaged or chafed",
+        "probability": 0.25
+      },
+      {
+        "cause": "Terminating resistor missing or failed",
+        "probability": 0.25
+      },
+      {
+        "cause": "Aftermarket device interfering with CAN bus",
+        "probability": 0.25
+      },
+      {
+        "cause": "ECM connector corrosion",
+        "probability": 0.25
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code appeared after aftermarket device installation (ELD, GPS, etc.)",
+        "likely_cause": "Aftermarket CAN device causing bus loading or termination issue",
+        "ai_value_add": "AI asks about recent device installations; QSOL doesn't check for aftermarket equipment"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "cummins_code": 641,
+    "spn": 641,
+    "fmi": 14,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "VGT Actuator \u2014 Special Instructions (Calibration Required)",
+    "system_category": "air_intake",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-VGT-001",
+    "applies_to": "X15,ISX15",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "VGT actuator out of calibration",
+        "probability": 0.3
+      },
+      {
+        "cause": "Actuator motor wear",
+        "probability": 0.25
+      },
+      {
+        "cause": "Carbon buildup on turbine vanes",
+        "probability": 0.25
+      },
+      {
+        "cause": "Actuator position sensor drift",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code appears right after ECM reflash/update",
+        "likely_cause": "VGT needs recalibration after ECM update, not physical replacement",
+        "ai_value_add": "AI checks ECM event log for recent reflash before suggesting part replacement"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "cummins_code": 651,
+    "spn": 651,
+    "fmi": 5,
+    "obd2_code": "P0201",
+    "pid_sid": null,
+    "description": "Injector Cylinder 1 \u2014 Current Below Normal (Open Circuit)",
+    "system_category": "fuel",
+    "complexity": "high",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-INJ-001",
+    "applies_to": "X15,ISX15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Injector solenoid failure",
+        "probability": 0.3
+      },
+      {
+        "cause": "Open circuit in injector wiring",
+        "probability": 0.25
+      },
+      {
+        "cause": "ECM driver failure",
+        "probability": 0.2
+      },
+      {
+        "cause": "Corroded injector connector",
+        "probability": 0.25
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code appears on multiple cylinders simultaneously",
+        "likely_cause": "ECM power supply issue or common connector problem, not individual injectors",
+        "ai_value_add": "AI detects multi-cylinder pattern suggesting ECM/wiring rather than injector failures"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "cummins_code": 1569,
+    "spn": 1569,
+    "fmi": 31,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Engine Protection Lamp Command \u2014 Stop Engine Light On",
+    "system_category": "engine_protection",
+    "complexity": "high",
+    "safety_critical": 1,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-PROT-002",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Critical fault active requiring engine shutdown",
+        "probability": 0.4
+      },
+      {
+        "cause": "Low oil pressure triggered protection",
+        "probability": 0.25
+      },
+      {
+        "cause": "High coolant temperature triggered protection",
+        "probability": 0.2
+      },
+      {
+        "cause": "Intermittent code triggered lamp but went inactive",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Lamp on but no other active codes found",
+        "likely_cause": "Intermittent code triggered lamp then went inactive; check event log timeline",
+        "ai_value_add": "AI reviews complete INSITE event log, not just current active codes"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "cummins_code": 1761,
+    "spn": 1761,
+    "fmi": 5,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment DOC Intake Temperature Sensor \u2014 Current Below Normal",
+    "system_category": "aftertreatment",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-DOC-001",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Temperature sensor failure",
+        "probability": 0.35
+      },
+      {
+        "cause": "Wiring open circuit from heat damage",
+        "probability": 0.3
+      },
+      {
+        "cause": "Connector corrosion from heat exposure",
+        "probability": 0.35
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Sensor was replaced but code returns within days",
+        "likely_cause": "Aftermarket sensor with wrong resistance curve; use OEM part only",
+        "ai_value_add": "AI checks if non-OEM part was used in recent repair"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "cummins_code": 2659,
+    "spn": 2659,
+    "fmi": 0,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Exhaust Backpressure Too High",
+    "system_category": "aftertreatment",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-EXH-001",
+    "applies_to": "X15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "DPF heavily loaded with soot/ash",
+        "probability": 0.35
+      },
+      {
+        "cause": "Aftertreatment module physically damaged",
+        "probability": 0.25
+      },
+      {
+        "cause": "Exhaust pipe restriction or collapse",
+        "probability": 0.2
+      },
+      {
+        "cause": "DPF pressure sensor tube blocked",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "DPF was recently cleaned/serviced",
+        "likely_cause": "DPF not reinstalled correctly or gasket leak causing sensor misread",
+        "ai_value_add": "AI checks recent DPF service before recommending replacement"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "cummins_code": 3031,
+    "spn": 3031,
+    "fmi": 9,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment Intake NOx Sensor \u2014 Abnormal Update Rate",
+    "system_category": "aftertreatment",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-NOX-001",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "NOx sensor internal failure",
+        "probability": 0.3
+      },
+      {
+        "cause": "CAN bus wiring issue to sensor",
+        "probability": 0.25
+      },
+      {
+        "cause": "Sensor power supply problem",
+        "probability": 0.25
+      },
+      {
+        "cause": "ECM communication error",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Both intake and outlet NOx sensors fail together",
+        "likely_cause": "Shared CAN bus wiring issue, not both sensors failing at once",
+        "ai_value_add": "AI checks for CAN bus codes and shared wiring before replacing expensive NOx sensors"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "cummins_code": 3216,
+    "spn": 3216,
+    "fmi": 9,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment DPF Pressure \u2014 Abnormal Update Rate",
+    "system_category": "aftertreatment",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-DPF-003",
+    "applies_to": "X15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "CAN bus communication issue",
+        "probability": 0.4
+      },
+      {
+        "cause": "Sensor internal fault",
+        "probability": 0.35
+      },
+      {
+        "cause": "ECM software glitch",
+        "probability": 0.25
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code appears only during cold start in winter",
+        "likely_cause": "Sensor warming up slowly in extreme cold, not actual failure",
+        "ai_value_add": "AI checks ambient temperature; if below -10\u00b0F, recommends monitoring not replacement"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "cummins_code": 3226,
+    "spn": 3226,
+    "fmi": 3,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment DPF Intake Pressure Sensor \u2014 Voltage Above Normal",
+    "system_category": "aftertreatment",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-DPF-002",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Pressure sensor failure",
+        "probability": 0.3
+      },
+      {
+        "cause": "Blocked pressure sensing tube",
+        "probability": 0.3
+      },
+      {
+        "cause": "Water in pressure lines",
+        "probability": 0.2
+      },
+      {
+        "cause": "Sensor wiring issue",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Sensor replaced but code returns within days",
+        "likely_cause": "Pressure tube not replaced or cleaned with sensor; debris remains in tube",
+        "ai_value_add": "AI flags that tube inspection is needed alongside sensor replacement"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "cummins_code": 3251,
+    "spn": 3251,
+    "fmi": 0,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment DPF Soot Load High \u2014 Regeneration Needed",
+    "system_category": "aftertreatment",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-DPF-001",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Excessive idle time preventing passive regen",
+        "probability": 0.3
+      },
+      {
+        "cause": "Failed regen due to low exhaust temperature",
+        "probability": 0.2
+      },
+      {
+        "cause": "DPF differential pressure sensor fault",
+        "probability": 0.2
+      },
+      {
+        "cause": "Turbo underperformance reducing exhaust temp",
+        "probability": 0.15
+      },
+      {
+        "cause": "Injector issue causing incomplete combustion",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Multiple failed regen attempts in INSITE logs",
+        "likely_cause": "Underlying issue preventing regen (7th injector or exhaust temps), not the DPF itself",
+        "ai_value_add": "QSOL says force regen; AI checks regen history and looks for root cause first"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "cummins_code": 3364,
+    "spn": 3364,
+    "fmi": 2,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "EGR Valve Position Error \u2014 Data Erratic or Intermittent",
+    "system_category": "egr",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-EGR-001",
+    "applies_to": "X15,ISX15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Carbon buildup on EGR valve",
+        "probability": 0.35
+      },
+      {
+        "cause": "EGR actuator wear",
+        "probability": 0.25
+      },
+      {
+        "cause": "Wiring harness chafing",
+        "probability": 0.2
+      },
+      {
+        "cause": "EGR cooler leak affecting valve operation",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Code intermittent, only appears at cold start",
+        "likely_cause": "Carbon buildup restricts valve at cold temps, clears when engine warms up",
+        "ai_value_add": "AI correlates code frequency with coolant temperature data from INSITE"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "cummins_code": 3556,
+    "spn": 3556,
+    "fmi": 3,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "DEF Tank Level Sensor \u2014 Voltage Above Normal",
+    "system_category": "aftertreatment",
+    "complexity": "low",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-DEF-005",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Level sensor failure in DEF tank",
+        "probability": 0.35
+      },
+      {
+        "cause": "Open wiring to sensor",
+        "probability": 0.3
+      },
+      {
+        "cause": "DEF tank header unit failure",
+        "probability": 0.2
+      },
+      {
+        "cause": "Connector corrosion",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": []
+  },
+  {
+    "id": 5,
+    "cummins_code": 3597,
+    "spn": 3597,
+    "fmi": 15,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Engine Protection Torque Derate \u2014 High Severity",
+    "system_category": "engine_protection",
+    "complexity": "high",
+    "safety_critical": 1,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-PROT-001",
+    "applies_to": "X15,ISX15,B6.7",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "Active high-severity fault triggering protection",
+        "probability": 0.4
+      },
+      {
+        "cause": "Coolant temperature critically high",
+        "probability": 0.2
+      },
+      {
+        "cause": "Oil pressure critically low",
+        "probability": 0.2
+      },
+      {
+        "cause": "Aftertreatment critical fault active",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "No other active codes visible to technician",
+        "likely_cause": "Inactive code still triggering protection; check inactive code list in INSITE",
+        "ai_value_add": "AI checks both active AND inactive codes; junior techs often miss the inactive list"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "cummins_code": 3936,
+    "spn": 3936,
+    "fmi": 21,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment SCR Catalyst Conversion Efficiency Low",
+    "system_category": "aftertreatment",
+    "complexity": "high",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-SCR-001",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "DEF quality issue (contaminated or old)",
+        "probability": 0.25
+      },
+      {
+        "cause": "DEF dosing valve failure",
+        "probability": 0.2
+      },
+      {
+        "cause": "SCR catalyst degradation",
+        "probability": 0.2
+      },
+      {
+        "cause": "DEF supply module failure",
+        "probability": 0.2
+      },
+      {
+        "cause": "Exhaust temperature too low for SCR",
+        "probability": 0.15
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "DEF tank just refilled",
+        "likely_cause": "Contaminated DEF or wrong fluid added to DEF tank (e.g., washer fluid)",
+        "ai_value_add": "AI asks about recent DEF fill before recommending expensive catalyst replacement"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "cummins_code": 4364,
+    "spn": 4364,
+    "fmi": 18,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment DEF Dosing Valve \u2014 Mechanical Fault",
+    "system_category": "aftertreatment",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-DEF-003",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "DEF crystallization blocking valve",
+        "probability": 0.3
+      },
+      {
+        "cause": "Dosing valve solenoid failure",
+        "probability": 0.25
+      },
+      {
+        "cause": "DEF contamination",
+        "probability": 0.25
+      },
+      {
+        "cause": "Valve seat wear from high mileage",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Vehicle operates in cold climate below 20\u00b0F regularly",
+        "likely_cause": "DEF freezing in dosing valve despite heater; check DEF heater circuit first",
+        "ai_value_add": "AI checks ambient temp history and DEF heater operation before valve replacement"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "cummins_code": 5246,
+    "spn": 5246,
+    "fmi": 0,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment SCR Operator Inducement \u2014 Engine Power Derate Active",
+    "system_category": "aftertreatment",
+    "complexity": "high",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-SCR-003",
+    "applies_to": "X15,ISX15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "DEF quality failure (wrong fluid or contaminated)",
+        "probability": 0.3
+      },
+      {
+        "cause": "DEF level critically low",
+        "probability": 0.25
+      },
+      {
+        "cause": "SCR catalyst efficiency below threshold",
+        "probability": 0.2
+      },
+      {
+        "cause": "Multiple unreset aftertreatment codes",
+        "probability": 0.15
+      },
+      {
+        "cause": "DEF system tampering detected",
+        "probability": 0.1
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Derate occurred right after DEF tank was overfilled",
+        "likely_cause": "Overfilling caused DEF level sensor reading error; drain to proper level and reset",
+        "ai_value_add": "QSOL focuses on DEF quality testing; AI asks about recent fill and overfill possibility"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "cummins_code": 520372,
+    "spn": 520372,
+    "fmi": 3,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment DEF Tank Temperature Sensor \u2014 Voltage Above Normal",
+    "system_category": "aftertreatment",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 0,
+    "qsol_procedure": "TS-DEF-004",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "DEF tank temperature sensor failure",
+        "probability": 0.3
+      },
+      {
+        "cause": "Open circuit in sensor wiring",
+        "probability": 0.25
+      },
+      {
+        "cause": "Corroded connector at DEF tank",
+        "probability": 0.25
+      },
+      {
+        "cause": "DEF tank header unit failure",
+        "probability": 0.2
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "DEF tank just replaced or cleaned",
+        "likely_cause": "Sensor connector not fully seated after tank service",
+        "ai_value_add": "AI checks for recent DEF system service before recommending sensor replacement"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "cummins_code": 520375,
+    "spn": 520375,
+    "fmi": 18,
+    "obd2_code": null,
+    "pid_sid": null,
+    "description": "Aftertreatment DEF Pump Speed Low \u2014 Not Reaching Commanded Speed",
+    "system_category": "aftertreatment",
+    "complexity": "medium",
+    "safety_critical": 0,
+    "causes_derate": 1,
+    "qsol_procedure": "TS-DEF-002",
+    "applies_to": "X15,B6.7,L9",
+    "created_at": "2026-03-05 21:02:18",
+    "typical_causes": [
+      {
+        "cause": "DEF pump motor wear",
+        "probability": 0.25
+      },
+      {
+        "cause": "Crystallized DEF in pump from sitting",
+        "probability": 0.25
+      },
+      {
+        "cause": "Low voltage supply to pump",
+        "probability": 0.25
+      },
+      {
+        "cause": "DEF supply line restriction",
+        "probability": 0.25
+      }
+    ],
+    "edge_cases": [
+      {
+        "scenario": "Vehicle sat unused for 30+ days",
+        "likely_cause": "DEF crystallized in pump and lines from sitting; flush system before replacing pump",
+        "ai_value_add": "AI checks vehicle idle/downtime history before recommending pump replacement"
+      }
+    ]
+  }
+]
