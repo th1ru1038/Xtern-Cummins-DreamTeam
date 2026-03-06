@@ -16,7 +16,7 @@ import json
 import os
 from datetime import datetime, timedelta
 
-DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'servicesync.db')
+DB_PATH = os.path.join(os.getcwd(), 'backend', 'servicesync.db')
 
 
 def get_connection():

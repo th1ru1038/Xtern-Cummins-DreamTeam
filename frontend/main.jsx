@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import cumminsLogo from "./Cummins_logo.svg";
 
@@ -1022,6 +1022,362 @@ p { margin: 0; }
   .prompt-placeholder { font-size: 20px; }
   .agent-top { flex-wrap: wrap; }
 }
+
+/* ═══════════════════════════════════════════════════
+   JUNIOR SESSION — 4-stage voice diagnostic workflow
+   ═══════════════════════════════════════════════════ */
+
+.js-shell {
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: linear-gradient(145deg, rgba(13,13,16,0.94), rgba(9,9,10,0.88));
+  box-shadow: 0 26px 50px rgba(0,0,0,0.35);
+  color: #f0f4f8;
+  min-height: 640px;
+  overflow: hidden;
+}
+
+.js-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.js-stages {
+  display: flex;
+  gap: 8px;
+}
+
+.js-stage-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 13px; font-weight: 800;
+  border: 2px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.4);
+  transition: 0.25s ease;
+}
+.js-stage-dot.active {
+  border-color: #da291c;
+  color: #fff;
+  background: #da291c;
+}
+.js-stage-dot.done {
+  border-color: #16a34a;
+  color: #fff;
+  background: #16a34a;
+}
+
+.js-body { padding: 20px; }
+
+/* Agent pipeline banner */
+.js-pipeline {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.js-pipe-step {
+  flex: 1; min-width: 200px;
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+}
+.js-pipe-step .pipe-icon { font-size: 18px; margin-right: 6px; }
+.js-pipe-step .pipe-label { font-weight: 700; font-size: 13px; }
+.js-pipe-step .pipe-detail { color: #b8c4d0; font-size: 12px; margin-top: 4px; }
+
+/* Briefing */
+.js-briefing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.js-card {
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  padding: 18px;
+}
+.js-fault-big {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 28px; font-weight: 700;
+  color: #da291c;
+  margin-bottom: 6px;
+}
+.js-fault-desc { color: #d4dde8; font-size: 14px; line-height: 1.5; }
+.js-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px; font-weight: 800;
+  text-transform: uppercase;
+}
+.js-badge.junior { background: #ffe7e5; color: #9c1e17; }
+.js-badge.intermediate { background: #fff7de; color: #8f6400; }
+.js-badge.senior { background: #dbf4e5; color: #0f6a39; }
+
+.js-roadmap { counter-reset: step; }
+.js-roadmap li {
+  counter-increment: step;
+  padding: 10px 0 10px 36px;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: #d8e0e8;
+  font-size: 14px;
+}
+.js-roadmap li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 10px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(218,41,28,0.2);
+  color: #da291c;
+  font-weight: 800; font-size: 12px;
+  display: grid; place-items: center;
+}
+
+.js-start-btn {
+  display: block;
+  width: 100%; max-width: 420px;
+  margin: 28px auto 0;
+  padding: 18px 24px;
+  border-radius: 16px;
+  border: 0;
+  background: #da291c;
+  color: #fff;
+  font-size: 18px; font-weight: 800;
+  cursor: pointer;
+  min-height: 64px;
+  letter-spacing: 0.3px;
+  transition: 0.2s ease;
+}
+.js-start-btn:hover { background: #b8221a; transform: translateY(-2px); }
+
+/* Voice split screen */
+.js-voice-split {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 16px;
+  min-height: 520px;
+}
+
+.js-diagram-panel {
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+  padding: 16px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.js-diagram-panel svg {
+  width: 100%; max-width: 380px; height: auto;
+  margin-top: 12px;
+}
+.js-diagram-label {
+  font-weight: 800; font-size: 14px;
+  color: #da291c;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.js-chat-panel {
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+  padding: 16px;
+  display: flex; flex-direction: column;
+}
+
+.js-chat-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  padding-bottom: 12px;
+  max-height: 380px;
+}
+
+.js-bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.45;
+  animation: jsBubbleIn 0.25s ease;
+}
+@keyframes jsBubbleIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.js-bubble.ai {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #e8eff5;
+}
+.js-bubble.user {
+  align-self: flex-end;
+  background: rgba(218,41,28,0.25);
+  border: 1px solid rgba(218,41,28,0.4);
+  color: #ffe8e5;
+}
+.js-bubble.interim {
+  align-self: flex-end;
+  background: rgba(218,41,28,0.12);
+  border: 1px dashed rgba(218,41,28,0.3);
+  color: #f0c0bc;
+  font-style: italic;
+}
+
+.js-escalation-banner {
+  background: rgba(208,135,0,0.2);
+  border: 1px solid rgba(208,135,0,0.5);
+  color: #ffe0a0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.js-voice-controls {
+  display: flex; align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.js-hold-btn {
+  flex: 1; min-width: 180px;
+  min-height: 64px;
+  border-radius: 16px;
+  border: 0;
+  background: #da291c;
+  color: #fff;
+  font-size: 16px; font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: 0.15s ease;
+  touch-action: none;
+}
+.js-hold-btn:active, .js-hold-btn.recording {
+  background: #8b1a13;
+  transform: scale(0.97);
+}
+.js-hold-btn.recording {
+  animation: jsPulseRec 1.2s ease-in-out infinite;
+}
+@keyframes jsPulseRec {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(218,41,28,0.5); }
+  50% { box-shadow: 0 0 0 14px rgba(218,41,28,0); }
+}
+
+.js-complete-btn {
+  min-height: 64px;
+  padding: 0 28px;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: #f0f4f8;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+}
+.js-complete-btn:hover { background: rgba(255,255,255,0.08); }
+
+/* Summary */
+.js-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.js-conf-bar {
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.js-conf-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.js-transcript-list {
+  list-style: none;
+  padding: 0; margin: 0;
+}
+.js-transcript-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px;
+  color: #d4dde8;
+}
+.js-transcript-list li strong { color: #fff; }
+
+.js-send-btn {
+  display: block;
+  width: 100%; max-width: 420px;
+  margin: 28px auto 0;
+  padding: 18px 24px;
+  border-radius: 16px;
+  border: 0;
+  background: #da291c;
+  color: #fff;
+  font-size: 18px; font-weight: 800;
+  cursor: pointer;
+  min-height: 64px;
+  transition: 0.2s ease;
+}
+.js-send-btn:hover { background: #b8221a; }
+.js-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Sent confirmation */
+.js-sent {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  min-height: 400px;
+  gap: 16px;
+}
+.js-check-icon {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: #16a34a;
+  display: grid; place-items: center;
+  font-size: 48px; color: #fff;
+}
+
+.js-loading {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 300px; gap: 12px;
+}
+.js-spinner {
+  width: 40px; height: 40px;
+  border: 4px solid rgba(255,255,255,0.15);
+  border-top-color: #da291c;
+  border-radius: 50%;
+  animation: jsSpin 0.8s linear infinite;
+}
+@keyframes jsSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .js-briefing-grid { grid-template-columns: 1fr; }
+  .js-voice-split { grid-template-columns: 1fr; }
+  .js-summary-grid { grid-template-columns: 1fr; }
+  .js-diagram-panel { max-height: 260px; }
+}
 `;
 
 function ShellHeader({ role, setRole, onSearch }) {
@@ -1335,6 +1691,621 @@ function SearchPage({ query, results, onPickRole }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   SVG Diagram helper — returns labeled SVG per fault system
+   ═══════════════════════════════════════════════════════════════ */
+
+function getFaultDiagram(faultCode) {
+  const code = (faultCode || "").toUpperCase();
+
+  // SPN 102 / turbocharger
+  if (code.includes("102") || code.includes("641") || code.includes("TURBO") || code.includes("P0299")) {
+    return {
+      label: "Turbocharger Assembly",
+      svg: (
+        <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Housing */}
+          <rect x="60" y="80" width="280" height="180" rx="24" stroke="#da291c" strokeWidth="2.5" fill="rgba(218,41,28,0.06)" />
+          {/* Compressor wheel */}
+          <circle cx="150" cy="170" r="64" stroke="#8bc8ff" strokeWidth="2" fill="rgba(139,200,255,0.08)" />
+          <circle cx="150" cy="170" r="28" stroke="#8bc8ff" strokeWidth="1.5" fill="rgba(139,200,255,0.15)" />
+          {/* Turbine wheel */}
+          <circle cx="280" cy="170" r="56" stroke="#f59e0b" strokeWidth="2" fill="rgba(245,158,11,0.08)" />
+          <circle cx="280" cy="170" r="24" stroke="#f59e0b" strokeWidth="1.5" fill="rgba(245,158,11,0.15)" />
+          {/* Shaft */}
+          <line x1="178" y1="170" x2="256" y2="170" stroke="#a0aec0" strokeWidth="4" strokeLinecap="round" />
+          {/* Intake arrow */}
+          <line x1="20" y1="170" x2="86" y2="170" stroke="#8bc8ff" strokeWidth="2" markerEnd="url(#arr)" />
+          {/* Exhaust arrow */}
+          <line x1="336" y1="170" x2="390" y2="170" stroke="#f59e0b" strokeWidth="2" markerEnd="url(#arr)" />
+          {/* Boost output arrow */}
+          <line x1="150" y1="106" x2="150" y2="50" stroke="#16a34a" strokeWidth="2" markerEnd="url(#arr)" />
+          {/* Wastegate */}
+          <rect x="300" y="100" width="36" height="28" rx="6" stroke="#e57373" strokeWidth="1.5" fill="rgba(229,115,115,0.1)" />
+          {/* Labels */}
+          <text x="150" y="26" textAnchor="middle" fill="#16a34a" fontSize="12" fontWeight="700">BOOST OUTPUT</text>
+          <text x="8" y="160" fill="#8bc8ff" fontSize="11" fontWeight="700">INTAKE</text>
+          <text x="346" y="160" fill="#f59e0b" fontSize="11" fontWeight="700">EXHAUST</text>
+          <text x="150" y="250" textAnchor="middle" fill="#8bc8ff" fontSize="12" fontWeight="700">COMPRESSOR</text>
+          <text x="280" y="250" textAnchor="middle" fill="#f59e0b" fontSize="12" fontWeight="700">TURBINE</text>
+          <text x="318" y="96" textAnchor="middle" fill="#e57373" fontSize="10" fontWeight="700">WASTEGATE</text>
+          <text x="215" y="162" textAnchor="middle" fill="#a0aec0" fontSize="10">SHAFT</text>
+          {/* VGT vanes indicator */}
+          {[0,40,80,120,160,200,240,280,320].map((a,i) => (
+            <line key={i} x1={280+Math.cos(a*Math.PI/180)*32} y1={170+Math.sin(a*Math.PI/180)*32}
+                  x2={280+Math.cos(a*Math.PI/180)*50} y2={170+Math.sin(a*Math.PI/180)*50}
+                  stroke="#f59e0b" strokeWidth="1" opacity="0.5" />
+          ))}
+          <text x="200" y="310" textAnchor="middle" fill="#da291c" fontSize="14" fontWeight="800">⚠ CHECK: VGT Vanes · Actuator · Boost Leak</text>
+          <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6Z" fill="#a0aec0"/></marker></defs>
+        </svg>
+      ),
+    };
+  }
+
+  // SPN 157 / fuel system
+  if (code.includes("157") || code.includes("P0087") || code.includes("P0093") || code.includes("FUEL")) {
+    return {
+      label: "Fuel Injection System",
+      svg: (
+        <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Rail */}
+          <rect x="40" y="60" width="320" height="30" rx="15" stroke="#da291c" strokeWidth="2.5" fill="rgba(218,41,28,0.06)" />
+          <text x="200" y="80" textAnchor="middle" fill="#da291c" fontSize="12" fontWeight="700">FUEL RAIL</text>
+          {/* Injectors */}
+          {[100,170,240,310].map((x,i) => (
+            <g key={i}>
+              <rect x={x-12} y="90" width="24" height="60" rx="6" stroke="#8bc8ff" strokeWidth="1.5" fill="rgba(139,200,255,0.08)" />
+              <line x1={x} y1="150" x2={x} y2="178" stroke="#8bc8ff" strokeWidth="2" />
+              <polygon points={`${x-6},178 ${x+6},178 ${x},194`} fill="rgba(139,200,255,0.3)" stroke="#8bc8ff" strokeWidth="1" />
+              <text x={x} y="210" textAnchor="middle" fill="#8bc8ff" fontSize="10" fontWeight="700">INJ {i+1}</text>
+            </g>
+          ))}
+          {/* Pump */}
+          <circle cx="55" cy="260" r="32" stroke="#f59e0b" strokeWidth="2" fill="rgba(245,158,11,0.08)" />
+          <text x="55" y="264" textAnchor="middle" fill="#f59e0b" fontSize="10" fontWeight="700">HIGH P</text>
+          <text x="55" y="276" textAnchor="middle" fill="#f59e0b" fontSize="10" fontWeight="700">PUMP</text>
+          {/* Line from pump to rail */}
+          <path d="M 87 260 Q 100 260 100 200 Q 100 90 100 75" stroke="#a0aec0" strokeWidth="1.5" fill="none" />
+          {/* Pressure sensor */}
+          <rect x="280" y="24" width="60" height="24" rx="6" stroke="#16a34a" strokeWidth="1.5" fill="rgba(22,163,74,0.1)" />
+          <text x="310" y="40" textAnchor="middle" fill="#16a34a" fontSize="10" fontWeight="700">SENSOR</text>
+          <line x1="310" y1="48" x2="310" y2="60" stroke="#16a34a" strokeWidth="1.5" />
+          <text x="200" y="310" textAnchor="middle" fill="#da291c" fontSize="14" fontWeight="800">⚠ CHECK: Rail Pressure · Sensor · Pump · Lines</text>
+        </svg>
+      ),
+    };
+  }
+
+  // SPN 110 / cooling
+  if (code.includes("110") || code.includes("P0217") || code.includes("COOL") || code.includes("TEMP")) {
+    return {
+      label: "Cooling System",
+      svg: (
+        <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Radiator */}
+          <rect x="140" y="20" width="120" height="70" rx="10" stroke="#8bc8ff" strokeWidth="2" fill="rgba(139,200,255,0.08)" />
+          <text x="200" y="60" textAnchor="middle" fill="#8bc8ff" fontSize="12" fontWeight="700">RADIATOR</text>
+          {/* Engine block */}
+          <rect x="120" y="160" width="160" height="100" rx="14" stroke="#da291c" strokeWidth="2.5" fill="rgba(218,41,28,0.06)" />
+          <text x="200" y="215" textAnchor="middle" fill="#da291c" fontSize="13" fontWeight="700">ENGINE BLOCK</text>
+          {/* Water pump */}
+          <circle cx="60" cy="210" r="26" stroke="#16a34a" strokeWidth="2" fill="rgba(22,163,74,0.08)" />
+          <text x="60" y="214" textAnchor="middle" fill="#16a34a" fontSize="10" fontWeight="700">W.PUMP</text>
+          {/* Thermostat */}
+          <rect x="330" y="120" width="50" height="30" rx="8" stroke="#f59e0b" strokeWidth="1.5" fill="rgba(245,158,11,0.08)" />
+          <text x="355" y="140" textAnchor="middle" fill="#f59e0b" fontSize="10" fontWeight="700">T-STAT</text>
+          {/* Flow lines */}
+          <path d="M200 90 L200 160" stroke="#8bc8ff" strokeWidth="1.5" strokeDasharray="6 4" />
+          <path d="M280 200 Q340 200 355 150" stroke="#f59e0b" strokeWidth="1.5" />
+          <path d="M355 120 Q355 55 260 55" stroke="#8bc8ff" strokeWidth="1.5" />
+          <path d="M140 55 Q60 55 60 184" stroke="#16a34a" strokeWidth="1.5" />
+          <path d="M86 210 L120 210" stroke="#16a34a" strokeWidth="1.5" />
+          {/* Fan */}
+          <text x="200" y="16" textAnchor="middle" fill="#a0aec0" fontSize="10">FAN ↻</text>
+          {/* Temp sensor */}
+          <rect x="240" y="270" width="60" height="22" rx="6" stroke="#e57373" strokeWidth="1.5" fill="rgba(229,115,115,0.08)" />
+          <text x="270" y="285" textAnchor="middle" fill="#e57373" fontSize="9" fontWeight="700">TEMP SENS</text>
+          <line x1="270" y1="260" x2="270" y2="270" stroke="#e57373" strokeWidth="1" />
+          <text x="200" y="330" textAnchor="middle" fill="#da291c" fontSize="14" fontWeight="800">⚠ CHECK: Thermostat · Pump · Coolant · Fan</text>
+        </svg>
+      ),
+    };
+  }
+
+  // Default engine block
+  return {
+    label: "Engine Assembly",
+    svg: (
+      <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="80" y="50" width="240" height="200" rx="20" stroke="#da291c" strokeWidth="2.5" fill="rgba(218,41,28,0.06)" />
+        <rect x="120" y="90" width="60" height="50" rx="8" stroke="#8bc8ff" strokeWidth="1.5" fill="rgba(139,200,255,0.08)" />
+        <rect x="220" y="90" width="60" height="50" rx="8" stroke="#8bc8ff" strokeWidth="1.5" fill="rgba(139,200,255,0.08)" />
+        <rect x="120" y="160" width="60" height="50" rx="8" stroke="#f59e0b" strokeWidth="1.5" fill="rgba(245,158,11,0.08)" />
+        <rect x="220" y="160" width="60" height="50" rx="8" stroke="#f59e0b" strokeWidth="1.5" fill="rgba(245,158,11,0.08)" />
+        <text x="150" y="120" textAnchor="middle" fill="#8bc8ff" fontSize="10" fontWeight="700">CYL 1</text>
+        <text x="250" y="120" textAnchor="middle" fill="#8bc8ff" fontSize="10" fontWeight="700">CYL 2</text>
+        <text x="150" y="190" textAnchor="middle" fill="#f59e0b" fontSize="10" fontWeight="700">CYL 3</text>
+        <text x="250" y="190" textAnchor="middle" fill="#f59e0b" fontSize="10" fontWeight="700">CYL 4</text>
+        <text x="200" y="280" textAnchor="middle" fill="#da291c" fontSize="14" fontWeight="800">ENGINE BLOCK</text>
+        <text x="200" y="320" textAnchor="middle" fill="#a0aec0" fontSize="12">General Diagnostics — Inspect per QSOL procedure</text>
+      </svg>
+    ),
+  };
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   JUNIOR SESSION — 4-stage voice diagnostic flow
+   ═══════════════════════════════════════════════════════════════ */
+
+const API = "http://localhost:8000";
+
+const ROADMAP_BY_SKILL = {
+  junior: [
+    "Visually inspect the turbocharger inlet and outlet hoses for cracks, loose clamps, or oil residue.",
+    "Check the air filter — remove and inspect for excessive dirt or damage. Confirm it's seated properly.",
+    "With engine running, listen for unusual whine or whistle from the turbo area that changes with RPM.",
+    "Use the boost gauge or scan tool to read live boost pressure. Compare to spec (28–32 PSI at full load).",
+    "Inspect the VGT actuator linkage for free movement. Check connector for corrosion or damage.",
+  ],
+  intermediate: [
+    "Connect scan tool and pull active/inactive fault codes. Note SPN 102 FMI values and freeze-frame data.",
+    "Perform a boost leak test: pressurize intake to 30 PSI and listen/spray for leaks at all connections.",
+    "Command VGT actuator through full range with scan tool. Verify smooth movement and correct position feedback.",
+    "Check exhaust backpressure upstream of turbo. Compare to specification for restriction.",
+    "Review service history for recent turbo or intake work that may indicate improper reassembly.",
+  ],
+  senior: [
+    "Analyze datalog: correlate boost target vs. actual across RPM sweep. Identify deviation onset point.",
+    "Perform VGT characterization test — compare actuator duty cycle vs. vane position sensor feedback curve.",
+    "Inspect turbo compressor and turbine wheels for blade damage, shaft play (axial and radial).",
+    "Evaluate EGR interaction — check if EGR valve leaking exhaust into intake side, robbing boost.",
+    "Cross-reference with fleet data: check if similar units show same fault pattern (systemic vs. isolated).",
+  ],
+};
+
+function JuniorSession() {
+  const [stage, setStage] = useState("BRIEFING"); // BRIEFING | VOICE | SUMMARY | SENT
+  const [techProfile, setTechProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Voice / chat state
+  const [messages, setMessages] = useState([]);
+  const [interimText, setInterimText] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [shouldEscalate, setShouldEscalate] = useState(false);
+  const [confidence, setConfidence] = useState(0);
+
+  // Report state
+  const [sending, setSending] = useState(false);
+  const [caseId, setCaseId] = useState(null);
+
+  const recognitionRef = useRef(null);
+  const chatEndRef = useRef(null);
+  const synthRef = useRef(window.speechSynthesis);
+
+  // ── Fetch technician profile on mount ──────────────────
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${API}/api/technician/TECH-JT-042`)
+      .then((r) => { if (!r.ok) throw new Error("Failed to load technician"); return r.json(); })
+      .then((data) => { setTechProfile(data); setLoading(false); })
+      .catch((e) => { setError(e.message); setLoading(false); });
+  }, []);
+
+  // ── Auto-scroll chat ───────────────────────────────────
+  useEffect(() => {
+    if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages, interimText]);
+
+  // ── Derived values ─────────────────────────────────────
+  const faultCode = techProfile?.assigned_fault_code || "SPN 102 FMI 1";
+  const faultDesc = techProfile?.fault_code_detail?.description || "Turbocharger Boost Pressure Low — Underboost Condition";
+  const techName = techProfile?.name || "Technician";
+  const skillLevel = techProfile?.skill_level || "junior";
+  const diagram = useMemo(() => getFaultDiagram(faultCode), [faultCode]);
+  const roadmap = ROADMAP_BY_SKILL[skillLevel] || ROADMAP_BY_SKILL.junior;
+  const caseMeta = techProfile?.assigned_case;
+
+  // ── Speak AI response aloud ────────────────────────────
+  const speakText = useCallback((text) => {
+    synthRef.current.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate = 0.9;
+    utt.pitch = 1.1;
+    const preferred = ["Samantha", "Karen", "Google UK English Female"];
+    const voices = synthRef.current.getVoices();
+    const match = voices.find((v) => preferred.some((p) => v.name.includes(p)));
+    if (match) utt.voice = match;
+    synthRef.current.speak(utt);
+  }, []);
+
+  // ── Send message to API ────────────────────────────────
+  const sendChat = useCallback(async (userText) => {
+    const userMsg = { role: "user", content: userText };
+    setMessages((prev) => [...prev, userMsg]);
+    setChatLoading(true);
+
+    try {
+      const res = await fetch(`${API}/api/junior/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          technician_id: techProfile?.technician_id || "TECH-JT-042",
+          fault_code: faultCode,
+          user_message: userText,
+          conversation_history: [...messages, userMsg],
+        }),
+      });
+      const data = await res.json();
+      const aiMsg = { role: "assistant", content: data.response };
+      setMessages((prev) => [...prev, aiMsg]);
+      setConfidence(data.confidence || 0);
+      if (data.should_escalate) setShouldEscalate(true);
+      speakText(data.response);
+    } catch {
+      setMessages((prev) => [...prev, { role: "assistant", content: "Connection issue. Please try again." }]);
+    } finally {
+      setChatLoading(false);
+    }
+  }, [messages, techProfile, faultCode, speakText]);
+
+  // ── Speech Recognition ─────────────────────────────────
+  const startRecording = useCallback(() => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { alert("Speech recognition not supported in this browser."); return; }
+
+    // Cancel any ongoing AI speech when user starts speaking
+    synthRef.current.cancel();
+
+    const recognition = new SR();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onresult = (event) => {
+      let interim = "";
+      let final_ = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const t = event.results[i][0].transcript;
+        if (event.results[i].isFinal) final_ += t;
+        else interim += t;
+      }
+      setInterimText(interim);
+      if (final_) {
+        setInterimText("");
+        sendChat(final_.trim());
+      }
+    };
+
+    recognition.onerror = () => { setIsRecording(false); setInterimText(""); };
+    recognition.onend = () => { setIsRecording(false); };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsRecording(true);
+  }, [sendChat]);
+
+  const stopRecording = useCallback(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+  }, []);
+
+  // ── Send report to senior ──────────────────────────────
+  const sendReport = useCallback(async () => {
+    setSending(true);
+    try {
+      const lastAi = [...messages].reverse().find((m) => m.role === "assistant");
+      const res = await fetch(`${API}/api/junior/report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          technician_id: techProfile?.technician_id || "TECH-JT-042",
+          fault_code: faultCode,
+          transcript: messages,
+          confidence: confidence,
+          diagnosis: lastAi?.content || "Diagnosis pending",
+          engine_serial: caseMeta?.engine_serial || "UNASSIGNED",
+        }),
+      });
+      const data = await res.json();
+      setCaseId(data.case_id);
+      setStage("SENT");
+    } catch {
+      alert("Failed to send report. Check that the API server is running.");
+    } finally {
+      setSending(false);
+    }
+  }, [messages, confidence, techProfile, faultCode, caseMeta]);
+
+  // ── Stage labels for the top bar ───────────────────────
+  const stageOrder = ["BRIEFING", "VOICE", "SUMMARY", "SENT"];
+  const stageIdx = stageOrder.indexOf(stage);
+
+  // ── Loading / Error states ─────────────────────────────
+  if (loading) {
+    return (
+      <section className="js-shell">
+        <div className="js-loading">
+          <div className="js-spinner" />
+          <p style={{ color: "#b8c4d0" }}>Loading technician profile...</p>
+        </div>
+      </section>
+    );
+  }
+  if (error) {
+    return (
+      <section className="js-shell">
+        <div className="js-body" style={{ textAlign: "center", paddingTop: 60 }}>
+          <h3 style={{ color: "#da291c" }}>Connection Error</h3>
+          <p style={{ color: "#b8c4d0", marginTop: 8 }}>{error}</p>
+          <p style={{ color: "#788494", marginTop: 8, fontSize: 13 }}>Make sure the API is running: <code>uvicorn src.api:app --port 8000</code></p>
+          <a className="chip-dark" href="#/home" style={{ marginTop: 20, display: "inline-block" }}>Return to Dashboard</a>
+        </div>
+      </section>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════
+  //  RENDER
+  // ══════════════════════════════════════════════════════
+
+  return (
+    <section className="js-shell">
+      {/* ── Top bar with stage dots ── */}
+      <div className="js-topbar">
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <h3 style={{ fontSize: 16, fontFamily: "'Space Grotesk', sans-serif" }}>ServiceSync AI</h3>
+          <span style={{ color: "#788494", fontSize: 12 }}>Junior Session</span>
+        </div>
+        <div className="js-stages">
+          {stageOrder.map((s, i) => (
+            <div key={s} className={`js-stage-dot ${i < stageIdx ? "done" : ""} ${i === stageIdx ? "active" : ""}`}>
+              {i < stageIdx ? "✓" : i + 1}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="js-body">
+
+        {/* ════════════ STAGE 1: BRIEFING ════════════ */}
+        {stage === "BRIEFING" && (
+          <>
+            {/* Agent pipeline */}
+            <div className="js-pipeline">
+              <div className="js-pipe-step">
+                <span className="pipe-icon">✅</span>
+                <span className="pipe-label">Triage Agent</span>
+                <div className="pipe-detail">Priority: {caseMeta?.priority || "P1"} — {caseMeta?.customer_sla === "priority" ? "Priority SLA" : "Standard SLA"}</div>
+              </div>
+              <div className="js-pipe-step">
+                <span className="pipe-icon">✅</span>
+                <span className="pipe-label">Evidence Agent</span>
+                <div className="pipe-detail">Fault predicted: {faultCode}</div>
+              </div>
+              <div className="js-pipe-step">
+                <span className="pipe-icon">✅</span>
+                <span className="pipe-label">Delegation Agent</span>
+                <div className="pipe-detail">Assigned to: {techName}</div>
+              </div>
+            </div>
+
+            {/* Briefing cards */}
+            <div className="js-briefing-grid">
+              {/* Left: Tech + fault info */}
+              <div className="js-card">
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #bae0ff, #86b6ff)", display: "grid", placeItems: "center", fontWeight: 800, color: "#1a3a5c" }}>
+                    {techName.split(" ").map((n) => n[0]).join("")}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 16 }}>{techName}</div>
+                    <span className={`js-badge ${skillLevel}`}>{skillLevel}</span>
+                  </div>
+                </div>
+                <div className="js-fault-big">{faultCode}</div>
+                <div className="js-fault-desc">{faultDesc}</div>
+                {caseMeta && (
+                  <div style={{ marginTop: 14, padding: "10px 12px", borderRadius: 10, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", fontSize: 13, color: "#b8c4d0" }}>
+                    <strong style={{ color: "#f0f4f8" }}>{caseMeta.customer_name}</strong> — {caseMeta.customer_location}<br />
+                    Engine: {caseMeta.engine_serial} · Symptoms: {caseMeta.symptoms}
+                  </div>
+                )}
+                {techProfile?.fault_code_detail?.typical_causes && (
+                  <div style={{ marginTop: 12 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#a0aec0", textTransform: "uppercase", marginBottom: 6 }}>Typical Causes</div>
+                    {techProfile.fault_code_detail.typical_causes.map((c, i) => (
+                      <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: "1px solid rgba(255,255,255,0.06)", fontSize: 13, color: "#d4dde8" }}>
+                        <span>{c.cause}</span>
+                        <span style={{ color: "#788494" }}>{Math.round(c.probability * 100)}%</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Right: Diagnostic roadmap */}
+              <div className="js-card">
+                <h3 style={{ fontSize: 16, marginBottom: 4 }}>Diagnostic Roadmap</h3>
+                <p style={{ color: "#788494", fontSize: 12, marginBottom: 10 }}>Steps tailored for {skillLevel} technician skill level</p>
+                <ol className="js-roadmap">
+                  {roadmap.map((step, i) => <li key={i}>{step}</li>)}
+                </ol>
+              </div>
+            </div>
+
+            <button className="js-start-btn" onClick={() => {
+              setStage("VOICE");
+              // Send initial AI greeting
+              sendChat("I'm starting the diagnostic session. What should I check first?");
+            }}>
+              🎤 Start Voice Session
+            </button>
+          </>
+        )}
+
+        {/* ════════════ STAGE 2: VOICE ════════════ */}
+        {stage === "VOICE" && (
+          <div className="js-voice-split">
+            {/* Left: SVG Diagram */}
+            <div className="js-diagram-panel">
+              <div className="js-diagram-label">{diagram.label}</div>
+              <div style={{ color: "#788494", fontSize: 12, marginTop: 2 }}>{faultCode}</div>
+              {diagram.svg}
+            </div>
+
+            {/* Right: Chat + Voice */}
+            <div className="js-chat-panel">
+              <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Voice Diagnostic Session</div>
+
+              <div className="js-chat-scroll">
+                {messages.map((m, i) => (
+                  <div key={i} className={`js-bubble ${m.role === "user" ? "user" : "ai"}`}>
+                    <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 3, opacity: 0.7 }}>
+                      {m.role === "user" ? "You" : "AI Mentor"}
+                    </div>
+                    {m.content}
+                  </div>
+                ))}
+                {interimText && (
+                  <div className="js-bubble interim">
+                    <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 3, opacity: 0.7 }}>Listening...</div>
+                    {interimText}
+                  </div>
+                )}
+                {chatLoading && (
+                  <div className="js-bubble ai" style={{ opacity: 0.6 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 3 }}>AI Mentor</div>
+                    Thinking...
+                  </div>
+                )}
+                <div ref={chatEndRef} />
+              </div>
+
+              {shouldEscalate && (
+                <div className="js-escalation-banner">
+                  ⚠ Senior technician review recommended — safety-related observation detected
+                </div>
+              )}
+
+              <div className="js-voice-controls">
+                <button
+                  className={`js-hold-btn ${isRecording ? "recording" : ""}`}
+                  onMouseDown={startRecording}
+                  onMouseUp={stopRecording}
+                  onTouchStart={(e) => { e.preventDefault(); startRecording(); }}
+                  onTouchEnd={(e) => { e.preventDefault(); stopRecording(); }}
+                  disabled={chatLoading}
+                >
+                  {isRecording ? "🔴 Recording... Release to Send" : "🎤 Hold to Speak"}
+                </button>
+                <button className="js-complete-btn" onClick={() => setStage("SUMMARY")}>
+                  Complete Session →
+                </button>
+              </div>
+
+              {confidence > 0 && (
+                <div style={{ marginTop: 10, fontSize: 12, color: "#788494" }}>
+                  Session confidence: <strong style={{ color: confidence >= 0.7 ? "#16a34a" : confidence >= 0.4 ? "#d08700" : "#c0352b" }}>{Math.round(confidence * 100)}%</strong>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ════════════ STAGE 3: SUMMARY ════════════ */}
+        {stage === "SUMMARY" && (
+          <>
+            <h3 style={{ marginBottom: 16 }}>Session Summary</h3>
+            <div className="js-summary-grid">
+              {/* Left: Transcript */}
+              <div className="js-card">
+                <h4 style={{ marginBottom: 10 }}>Conversation Transcript</h4>
+                <ul className="js-transcript-list">
+                  {messages.map((m, i) => (
+                    <li key={i}>
+                      <strong>{m.role === "user" ? "Technician" : "AI Mentor"}:</strong> {m.content}
+                    </li>
+                  ))}
+                  {messages.length === 0 && <li style={{ color: "#788494" }}>No messages recorded.</li>}
+                </ul>
+              </div>
+
+              {/* Right: Diagnosis + meta */}
+              <div className="js-card">
+                <h4 style={{ marginBottom: 10 }}>AI Diagnosis</h4>
+                <div style={{ fontSize: 14, lineHeight: 1.6, marginBottom: 14 }}>
+                  {(() => {
+                    const lastAi = [...messages].reverse().find((m) => m.role === "assistant");
+                    return lastAi?.content || "No diagnosis generated yet.";
+                  })()}
+                </div>
+
+                <div style={{ fontSize: 12, color: "#a0aec0", textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Confidence</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                  <div className="js-conf-bar" style={{ flex: 1 }}>
+                    <div className="js-conf-fill" style={{
+                      width: `${Math.round(confidence * 100)}%`,
+                      background: confidence >= 0.7 ? "#16a34a" : confidence >= 0.4 ? "#d08700" : "#c0352b",
+                    }} />
+                  </div>
+                  <span style={{ fontWeight: 800, fontSize: 18, color: confidence >= 0.7 ? "#16a34a" : confidence >= 0.4 ? "#d08700" : "#c0352b" }}>
+                    {Math.round(confidence * 100)}%
+                  </span>
+                </div>
+
+                <div style={{ display: "grid", gap: 8, fontSize: 13, color: "#b8c4d0" }}>
+                  <div><strong style={{ color: "#f0f4f8" }}>Technician:</strong> {techName} ({skillLevel})</div>
+                  <div><strong style={{ color: "#f0f4f8" }}>Fault Code:</strong> {faultCode}</div>
+                  <div><strong style={{ color: "#f0f4f8" }}>Engine:</strong> {caseMeta?.engine_serial || "N/A"}</div>
+                  <div><strong style={{ color: "#f0f4f8" }}>Customer:</strong> {caseMeta?.customer_name || "N/A"}</div>
+                  <div><strong style={{ color: "#f0f4f8" }}>Timestamp:</strong> {new Date().toLocaleString()}</div>
+                  <div><strong style={{ color: "#f0f4f8" }}>Turns:</strong> {messages.length}</div>
+                </div>
+
+                {shouldEscalate && (
+                  <div className="js-escalation-banner" style={{ marginTop: 14 }}>
+                    ⚠ Escalation recommended — flagged during session
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <button className="js-send-btn" onClick={sendReport} disabled={sending}>
+              {sending ? "Sending..." : "📨 Send to Senior for Approval"}
+            </button>
+          </>
+        )}
+
+        {/* ════════════ STAGE 4: SENT ════════════ */}
+        {stage === "SENT" && (
+          <div className="js-sent">
+            <div className="js-check-icon">✓</div>
+            <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 28 }}>Report Sent to Senior</h2>
+            <p style={{ color: "#b8c4d0", maxWidth: 420 }}>
+              Your diagnostic session for <strong style={{ color: "#fff" }}>{faultCode}</strong> has been submitted for senior technician review and approval.
+            </p>
+            {caseId && <div style={{ fontSize: 14, color: "#788494" }}>Case ID: <strong style={{ color: "#fff" }}>{caseId}</strong></div>}
+            <a href="#/home" style={{
+              display: "inline-block", marginTop: 12,
+              padding: "14px 28px", borderRadius: 14,
+              background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+              color: "#f0f4f8", fontWeight: 700, textDecoration: "none", fontSize: 15,
+              minHeight: 60, lineHeight: "32px",
+            }}>Return to Dashboard</a>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+
 function App() {
   const [role, setRole] = useState("Junior");
   const [toast, setToast] = useState("");
@@ -1400,7 +2371,9 @@ function App() {
   });
 
   let view = null;
-  if (routeKey === "search") {
+  if (routeKey === "junior-session") {
+    view = <JuniorSession />;
+  } else if (routeKey === "search") {
     view = <SearchPage query={searchQuery} results={results} onPickRole={setRole} />;
   } else if (staticPage) {
     view = <InfoPage title={staticPage.title} description={staticPage.description} />;
