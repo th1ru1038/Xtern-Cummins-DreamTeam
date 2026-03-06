@@ -34,7 +34,7 @@ FAULT_CODES = [
     {
         "cummins_code": 111,
         "spn": 100, "fmi": 1,
-        "obd2_code": "P0192",
+        "obd2_code": "P0524",
         "pid_sid": "PID 100",
         "description": "Engine Oil Pressure Low — Data Valid But Below Normal Range",
         "system_category": "lubrication",
@@ -454,7 +454,7 @@ FAULT_CODES = [
     {
         "cummins_code": 112,
         "spn": 111, "fmi": 3,
-        "obd2_code": "P0237",
+        "obd2_code": None,
         "pid_sid": "PID 111",
         "description": "Engine Coolant Level Sensor — Voltage Above Normal",
         "system_category": "cooling",
